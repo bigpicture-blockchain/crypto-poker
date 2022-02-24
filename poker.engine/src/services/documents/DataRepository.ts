@@ -26,10 +26,12 @@ import { ChangeSeatHistory } from '../../model/ChangeSeatHistory';
 import { LoginRequest } from '../../../../poker.ui/src/shared/login-request';
 import { TableProcessorMessage, DbTableProcessorMessage } from '../../admin/processor/table-processor/TableProcessor';
 import { DbGameResults } from '../../model/table/DbGameResults';
+import { RewardsDetails } from '../../model/table/RewardsDetails';
 import { SharedHelpers } from '../../shared-helpers';
 import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
 import { inspect } from 'util'
+import { RewardReports } from '../../model/table/RewardsReports';
 
 export class DataRepository implements IDataRepository {
 
@@ -191,6 +193,17 @@ export class DataRepository implements IDataRepository {
     }
     return this.db.collection('payments').save(payment);
   }
+
+
+  saveRewardsDetails(rewardsDetails: RewardsDetails): any {
+    var collection = this.db.collection('rewards');
+    return collection.save(rewardsDetails);
+  }
+
+  // updateRewardReport(rewardReport: RewardReports): any {
+  //   let rewards = this.db.collection('rewardsReport').replaceOne({ guid: guid}, upsert=true);
+  // }
+
 
   saveGame(game: DbGameResults): any {
     var collection = this.db.collection('games');
@@ -561,6 +574,12 @@ export class DataRepository implements IDataRepository {
       }
     }
     return arr;
+
+  }
+
+  async getRewards(guid: string): Promise<any> {
+    let rewards = await this.db.collection('rewards').findOne({ guid: guid });
+    return rewards;
 
   }
 

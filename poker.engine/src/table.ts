@@ -1125,6 +1125,23 @@ import { UserSmall } from './model/UserSmall';
      dbGame.auditEvents = this.auditEvents;
      dbGame.boardCards = this.gameState.boardCards;
      dbGame.players = gameResultPlayers;
+     dbGame.potResults[0].playerHandEvaluatorResults
+     let rewardsDetails;
+     for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
+      rewardsDetails = {
+         date: new Date(Date.now()),
+         guid: gameResultPlayers[counter01].guid,
+         profitLoss: gameResultPlayers[counter01].profitLoss,
+         handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRank,
+         handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRankEnglish,
+         seeFlop: false,
+         seeTurn: false,
+         seeRiver: false,
+         winHand: false
+       }
+       await this.dataRepository.saveRewardsDetails(rewardsDetails);
+     }
+
      
      await this.dataRepository.saveGame(dbGame);
      let temp = await this.dataRepository.saveTableStates([ this.getTableState() ]);

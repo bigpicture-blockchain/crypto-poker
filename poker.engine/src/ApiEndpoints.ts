@@ -135,6 +135,10 @@ export class ApiEndpoints {
 
         });
 
+        app.post('/api/rewards', async (req:any, res:any) => {
+            let rewards  = await this.dataRepository.getRewards("b36c39b9b7480d78fc697dabeb7d940b95dc2a2d");
+            res.send(rewards);
+        });
         
     }
 }

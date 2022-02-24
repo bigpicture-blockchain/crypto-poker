@@ -1,3 +1,4 @@
+var fs = require('fs');
 import { LogoutResult, LoginResult } from './../../poker.ui/src/shared/login-request';
 import { Decimal } from './../../poker.ui/src/shared/decimal';
 import { Table } from "./table";
@@ -21,7 +22,6 @@ var logger = require('log4js').getLogger();
 var _ = require('lodash');
 import to from '../../poker.ui/src/shared/CommonHelpers';
 import { GlobalChatRequestHandler } from './handlers/GlobalChatRequestHandler';
-import { LoginRequestHandler } from './handlers/LoginRequestHandler';
 import { AbstractMessageHandler } from './handlers/AbstractMessageHandler';
 import { RegisterRequestHandler } from './handlers/RegisterRequestHandler';
 import * as  encryption from './framework/encryption';
@@ -122,7 +122,7 @@ export class PokerProcessor implements IBroadcastService,IPokerTableProvider {
       let query = url.parse(info.req.url, true).query;
       
       let sessionCookie:SessionCookie;   
-      if(query.sid){
+      if(query.sid){  
         try {
           sessionCookie = <SessionCookie>JSON.parse(encryption.decrypt(query.sid));
         } catch (error) {
@@ -180,12 +180,15 @@ export class PokerProcessor implements IBroadcastService,IPokerTableProvider {
 
 
       ws.on('message', (message: any) => {
-        
+
         try {
-          
           if(message.buffer && message.buffer.constructor.name==='ArrayBuffer'){            
             let clientMessage = protobufConfig.deserialize(message, 'ClientMessage');            
-            //console.log(`received ${message.byteLength} bytes`, clientMessage);            
+            let nowts = Date.now();
+            let date_ob = new Date(nowts);
+            let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
+            fs.appendFileSync('./datajump.json', datestring + "\r\n" +  "receivedMessage: ===>" + JSON.stringify(clientMessage, null, 2) + '\r\n' , 'utf-8');
+            // console.log(`received ${message.byteLength} bytes`, clientMessage);            
             this.logAndEnqueue(wsHandle, clientMessage);
           }else{
             logger.info(`message is not an ArrayBuffer:`, message);

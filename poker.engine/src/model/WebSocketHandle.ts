@@ -1,4 +1,5 @@
-﻿import WebSocket = require('ws');
+﻿var fs = require('fs');
+import WebSocket = require('ws');
 import { User } from "./User";
 import {DataContainer, PokerError, UserData } from "../../../poker.ui/src/shared/DataContainer";
 var logger = require('log4js').getLogger();
@@ -64,6 +65,10 @@ export class WebSocketHandle implements ISubscriber {
       
       try {
         if(data instanceof DataContainer){        
+          let nowts = Date.now();
+          let date_ob = new Date(nowts);
+          let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
+          fs.appendFileSync('./datajump.json', "WebSocketHands (sending back): ===>" + datestring + '\r\n' + JSON.stringify(data, null, 2) + '\r\n========================END======================\r\n' , 'utf-8');
           data = protobufConfig.serialize(data, 'DataContainer');                    
         }
         try {        
