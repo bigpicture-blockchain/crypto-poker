@@ -1166,11 +1166,20 @@ color:green;
   text-align: center;
 }
 .chatRow {
-    margin: 0;
+ 
+    // height: 42px;
+    // width: 327px;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 28px;
+  
 }
 .chatScreenName {
-    color: red;
-    font-weight: bold;
+    // color: red;
+    // font-weight: bold;
 }
 .chatDealer {
   color: aqua;
@@ -1352,10 +1361,30 @@ ux-dialog {
 .global-chat-header-icon{
     // background-image: url('images/troll.png');
     // background-position: left;
-    // background-repeat: no-repeat;     
+    // background-repeat: no-repeat;   
+    
+      color: #FFFFFF;
+      font-family: "Open Sans";
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 28px;
 }
 .global-chatbox-header{
-    width: 350px;
+    // width: 350px;
+    
+}
+.global-chat-input{
+
+    box-sizing: border-box;
+    height: 31px;
+    width: 331px;
+    border: 1px solid #6C6C6C;
+    border-radius: 4px;
+    background-color: #000000;
+    margin-left: 10px;
+    margin-bottom: 10px;
+  
 }
 .clear {
     clear: both;
@@ -1376,7 +1405,7 @@ ux-dialog {
     height: 100%;  
     opacity: .08; 
     z-index: -1;
-    background: url($cdn + 'images/troll.jpg') no-repeat;
+    // background: url($cdn + 'images/troll.jpg') no-repeat;
     overflow:hidden;
   }
   ::-webkit-scrollbar
