@@ -3,7 +3,7 @@
 export class SaveUserEmail {
   _id?: string;//will be a mongodb id
   userEmail: string;
-  userSolonaAdd: string;
+  userSolanaAdd: string;
   createdDate: Date;
    
 

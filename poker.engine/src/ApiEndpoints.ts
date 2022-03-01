@@ -140,7 +140,7 @@ export class ApiEndpoints {
         app.post('/api/saveEmail', async (req: any, res: any) => {
             let saveUserEmail = new SaveUserEmail()
             saveUserEmail.userEmail=req.body.userEmail
-            saveUserEmail.userSolonaAdd=req.body.userSolonaAdd
+            saveUserEmail.userSolanaAdd=req.body.userSolanaAdd
             saveUserEmail.createdDate=new Date();
             this.dataRepository.saveUserEmail(saveUserEmail)
             res.send({ success: "success" });
