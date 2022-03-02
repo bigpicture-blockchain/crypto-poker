@@ -15,10 +15,10 @@ import {Chip} from "./model/chip";
 import { Simulations } from "./simulations";
 import { CashOutRequestResult, PotResult, FundAccountResult, AccountFunded, AccountWithdrawlResult, SetTableOptionResult,
   GetAccountSettingsResult, SetAccountSettingsResult, ChatMessage, GlobalChatResult, ChatMessageResult, UserData, Account,
-  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
+  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
 import {AccountSettings} from "./account-settings";
 import {MessageWindow} from "./message-window";
-import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
+import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, RewardsReportRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
 import { CommonHelpers, getCardSuit } from './shared/CommonHelpers';
 import { AutoOptionResult } from "./shared/AutoOptionResult";
 import environment from './environment';
@@ -189,7 +189,7 @@ export class PokerTable {
       this.pingStartDate = new Date();
       this.apiService.send(new Ping());
       this.pingTimer = window.setTimeout(() => { this.sendPing()}, 20000);    
-    }    
+    }
   }
 
   handleServerPong() {
@@ -204,7 +204,7 @@ export class PokerTable {
     this.pingTime = null;
     this.isLoadingTable = true;
     window.clearInterval(this.pingTimer);
-  }
+  } 
 
 
   clear() {        
@@ -295,6 +295,7 @@ export class PokerTable {
       { key: 'leaderboardResult', handler: (data: LeaderboardResult) => { this.ea.publish(Object.assign(new LeaderboardResult(), data)); } },
       { key: 'transferFundsResult', handler: (data: TransferFundsResult) => { this.ea.publish(Object.assign(new TransferFundsResult(), data)); } },
       { key: 'exchangeRates', handler: (data: ExchangeRateResult) => { this.ea.publish(Object.assign(new ExchangeRateResult(), data)); } },
+      { key: 'rewardsReportResult', handler: (data: RewardsReportResult) => { this.ea.publish(Object.assign(new RewardsReportResult(), data)); } },
       { key: 'registerResult', handler: (data: RegisterResult) => { this.ea.publish(Object.assign(new RegisterResult(), data)); } },
       { key: 'tournamentSubscriptionResult', handler: (data) => { this.ea.publish(Object.assign(new TournamentSubscriptionResult(), data)); } },
       { key: 'loginResult', handler: this.handleLoginResult },
@@ -313,7 +314,7 @@ export class PokerTable {
       let data = message[handler.key];
       if (data) {
         handled = true;
-        //console.log('handling ' + handler.key, data);
+        console.log('handling ' + handler.key, data);
         handler.handler.call(this, data);
 
       }
@@ -354,6 +355,7 @@ export class PokerTable {
       let message = new ClientMessage();
       message.listTablesRequest = new ListTablesRequest();
       message.exchangeRatesRequest = new ExchangeRatesRequest();
+      message.rewardsReportRequest = new RewardsReportRequest();
       message.tournamentSubscriptionRequest = new TournamentSubscriptionRequest();
       message.globalChatRequest = new GlobalChatRequest(undefined, true);
       this.apiService.sendMessage(message);      

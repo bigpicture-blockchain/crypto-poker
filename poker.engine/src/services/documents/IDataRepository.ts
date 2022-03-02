@@ -3,6 +3,7 @@ import { IReconcilliationView } from './../../../../poker.admin.ui.angular/src/a
 import {User} from "../../model/User";
 import {ChatMessage, Account} from "../../../../poker.ui/src/shared/DataContainer";
 import { ExchangeRate } from "../../../../poker.ui/src/shared/ExchangeRate";
+import { RewardsReport } from "../../../../poker.ui/src/shared/RewardsReport";
 import { Payment } from "../../model/Payment";
 import {TableBalance, UserTableAccount } from "../../model/TableBalance";
 import { ClientMessage } from '../../../../poker.ui/src/shared/ClientMessage';
@@ -27,10 +28,13 @@ export class IDataRepository {
   getUserAccounts(guid: string) : Promise<Account[]> { throw new Error("Not implemented"); };  
   saveUser(user: User): Promise<void> { throw new Error("Not implemented"); };
   saveRewardsDetails(rewardsDetails: RewardsDetails): any { throw new Error("Not implemented"); };  
+  updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string): any { throw new Error("Not implemented"); };  
+  fillPercentile(): any { throw new Error("Not implemented"); };  
   saveGame(game: DbGameResults): any { throw new Error("Not implemented"); };  
   saveExchangeRate(exchangeRate: ExchangeRate): any { throw new Error("Not implemented"); };
   getExchangeRate(base: string): Promise<ExchangeRate> { throw new Error("Not implemented"); };
   getExchangeRates(): Promise<ExchangeRate[]> { throw new Error("Not implemented"); };
+  getRewardsReport(): Promise<RewardsReport[]> { throw new Error("Not implemented"); };
   saveClientMessage(message: ClientMessage, tableId: string, guid: string): Promise<any> { throw new Error("Not implemented"); };  
   getPayments(args:{guid?:string, currency?:string, type?:string}): Promise<Payment[]> { throw new Error("Not implemented"); };
   getPaymentsSince(id:string): Promise<Payment[]> { throw new Error("Not implemented"); };

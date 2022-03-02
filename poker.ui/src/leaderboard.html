@@ -2,11 +2,47 @@
   <require from="./lib/number-format"></require>
   <require from="./lib/crypto-format"></require>
   <div id="leaderboard-container">
-
-
+    
+    
+    <div show.bind="rewards.length">
+        
+      <div style="margin-top: 10px;">
+        <table class="leaderboard">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>PL$</th>          
+              <th>FlopSeen</th>
+              <th>TurnSeen</th>
+              <th>RiverSeen</th>
+              <th>WonHands</th>
+              <th>Cur Mission</th>
+              <th>One Pair</th>
+              <th>Two Pairs</th>
+              <th>Percentile</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr repeat.for="rew of rewards">
+              <td><span class="table-currency"></span>${rew.guid}</td>  
+              <td><span class="table-currency"></span>${rew.profitLoss}</td>              
+              <td><span class="table-currency"></span>${rew.seeFlop}</td>              
+              <td><span class="table-currency"></span>${rew.seeTurn}</td>              
+              <td><span class="table-currency"></span>${rew.seeRiver}</td>              
+              <td><span class="table-currency"></span>${rew.winHand}</td>              
+              <td><span class="table-currency"></span>${rew.currentMission}</td>              
+              <td><span class="table-currency"></span>${rew.handOnePair}</td>              
+              <td><span class="table-currency"></span>${rew.handTwoPairs}</td>              
+              <td><span class="table-currency"></span>${rew.percentile}</td>              
+              <td><span class="table-currency"></span>${rew.missionProgress}</td>              
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     
       <div show.bind="rates.length">
-          
           <div style="margin-top: 10px;">
             <table class="leaderboard">
               <thead>
@@ -36,6 +72,7 @@
           </div>
       </div>
   
+
       <div show.bind="results.length">
           <h4 style="margin-top: 20px;">Leaderboard</h4>
           <div style="margin-top: 10px;">

@@ -1,4 +1,5 @@
-﻿import { UserSmall } from './../../model/UserSmall';
+﻿const percentile = require('percentile');
+import { UserSmall } from './../../model/UserSmall';
 import { TournamentResult } from './../../model/TournamentResult';
 import { Server, Db, ReplaceOneOptions } from 'mongodb';
 const ObjectID = require('mongodb').ObjectID;
@@ -6,6 +7,7 @@ const ObjectID = require('mongodb').ObjectID;
 import { User } from "../../model/User";
 import { GamePotResult } from "../../model/TexasHoldemGameState";
 import { ExchangeRate } from "../../../../poker.ui/src/shared/ExchangeRate";
+import { RewardsReport } from "../../../../poker.ui/src/shared/RewardsReport";
 import { ChatMessage, Account, } from "../../../../poker.ui/src/shared/DataContainer";
 import { Currency, CurrencyUnit } from "../../../../poker.ui/src/shared/Currency";
 import { PaymentType } from "../../../../poker.ui/src/shared/PaymentType";
@@ -31,17 +33,18 @@ import { SharedHelpers } from '../../shared-helpers';
 import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
 import { inspect } from 'util'
-import { RewardReports } from '../../model/table/RewardsReports';
+import { RewardsReportLeaderboard } from '../../model/table/RewardsReportLeaderboard';
 
 export class DataRepository implements IDataRepository {
 
-
-
+  
+  
 
   private server: Server;
   db: Db;
   dbName: string;
-
+  // private percentil[]: number;
+  static percentil: number[];
   constructor(dbName: string) {
     this.dbName = dbName;
   }
@@ -196,13 +199,118 @@ export class DataRepository implements IDataRepository {
 
 
   saveRewardsDetails(rewardsDetails: RewardsDetails): any {
-    var collection = this.db.collection('rewards');
+    var collection = this.db.collection('rewardsDetail');
     return collection.save(rewardsDetails);
   }
 
-  // updateRewardReport(rewardReport: RewardReports): any {
-  //   let rewards = this.db.collection('rewardsReport').replaceOne({ guid: guid}, upsert=true);
-  // }
+  async notNaN(myNumber: any) {
+    return (myNumber == undefined || isNaN(myNumber)) ? 0 : myNumber;
+  }
+
+  async updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string) {
+    // DataRepository.percentil = await this.fillPercentile();
+    let Missions = {
+      level1: {
+        seeFlop: 20,
+        seeTurn: 15,
+        seeRiver: 15
+      },
+      level2: {
+        winHand: 15,
+        handOnePair: 20,
+        handTwoPairs: 5
+      },
+      level3: {
+        winHand: 50,
+        seeFlop: 100,
+        seeTurn: 75,
+        seeRiver: 50
+      }
+    }
+    let  collection = this.db.collection('rewardsReportLeaderboard');
+    const query = { guid: guid };
+    let tempReport = await collection.findOne(query);
+    let addProfitLoss = rewardsDetails.profitLoss
+    let addOnePair = rewardsDetails.handRank == 2 ? 1 : 0;
+    let addTwoPairs = rewardsDetails.handRank == 3 ? 1 : 0;
+    let addSeeFlop = rewardsDetails.lastStreet == ("flop" || "turn" || "river") ? 1 : 0;
+    let addSeeTurn = rewardsDetails.lastStreet == ("turn" || "river") ? 1 : 0;
+    let addSeeRiver = rewardsDetails.lastStreet == "river" ? 1 : 0;
+    let addWinHand = rewardsDetails.winHand ? 1 : 0;
+    let update, lastProfitLoss, lastHandOnePair, lastHandTwoPairs, lastSeeFlop, lastSeeTurn, lastSeeRiver, lastWinHand, currentMission, lastHandsPlayed;
+    if (tempReport != null) {
+      lastProfitLoss = await this.notNaN(tempReport.profitLoss);
+      lastHandOnePair = await this.notNaN(tempReport.handOnePair);
+      lastHandTwoPairs = await this.notNaN(tempReport.handTwoPairs);
+      lastSeeFlop = await this.notNaN(tempReport.seeFlop);
+      lastSeeTurn = await this.notNaN(tempReport.seeTurn);
+      lastSeeRiver = await this.notNaN(tempReport.seeRiver);
+      lastWinHand = (tempReport.winHand == undefined || isNaN(tempReport.winHand) || tempReport.winHand == false) ? 0 : tempReport.winHand;
+      lastHandsPlayed = await this.notNaN(tempReport.handsPlayed);
+      let completedmission = 0;
+      let maxmission = tempReport.missionProgress;
+      let currentMission = 1;
+      
+      if (tempReport.currentMission == 1)  {
+        if (tempReport.seeFlop>Missions.level1.seeFlop || tempReport.seeTurn>=Missions.level1.seeTurn || tempReport.seeRiver15 >=Missions.level1.seeRiver) {          
+          currentMission = 2;
+        }
+      } else if (tempReport.currentMission == 2 ) {
+        if (tempReport.winHand>Missions.level2.winHand || tempReport.handOnePair>=Missions.level2.handOnePair || tempReport.handTwoPairs >=Missions.level2.handTwoPairs) {          
+          currentMission = 3;
+        }
+      } else if (tempReport.currentMission == 3 ) {
+        if (tempReport.seeFlop>Missions.level1.seeFlop || tempReport.seeTurn>=Missions.level1.seeTurn || tempReport.seeRiver15 >=Missions.level1.seeRiver) {          
+          currentMission = 4;
+        }
+      }
+      let totProfitLoss = lastProfitLoss + addProfitLoss;
+      // console.log(perce);
+      switch(totProfitLoss) {
+
+
+
+      }
+     
+      update = {
+        $set: {
+          guid: guid, profitLoss: totProfitLoss, handOnePair: lastHandOnePair + addOnePair,
+          handTwoPairs: lastHandTwoPairs + addTwoPairs, seeFlop: lastSeeFlop + addSeeFlop, seeTurn: lastSeeTurn + addSeeTurn, seeRiver: lastSeeRiver + addSeeRiver,
+          winHand: lastWinHand + addWinHand, currentMission: currentMission, handsPlayed: lastHandsPlayed + 1
+        } 
+      }
+      collection.updateOne(query, update);
+    } else {
+      update = {
+        guid: guid, profitLoss: addProfitLoss, handOnePair: addOnePair,
+        handTwoPairs: addTwoPairs, seeFlop: addSeeFlop, seeTurn: addSeeTurn, seeRiver: addSeeRiver,
+        winHand: addWinHand, currentMission: currentMission
+      } 
+      collection.insertOne(update);
+    }
+
+  }
+
+  async fillPercentile() {
+    let perc = Number;
+    let colRewardsReport = this.db.collection('rewardsReportLeaderboard');
+    let positions = await colRewardsReport.find().toArray(function(err, result) {
+      if (err) throw err;
+      let percPl = [];
+      for (let counter = 0; counter < result.length; counter++) {
+        console.log(result[counter].profitLoss);
+        percPl.push(result[counter].profitLoss);
+      }
+      perc = percentile([10,25,40,60,75,90],percPl);    
+      return perc;  
+    });
+    
+    
+    // let profitList = [];
+    // const allValues = await positions.forEach(console.dir);
+    // for (let counter=0;counter<colRewardReports.length; counter++) {
+    // }
+  }
 
 
   saveGame(game: DbGameResults): any {
@@ -229,6 +337,16 @@ export class DataRepository implements IDataRepository {
 
   getExchangeRates(): Promise<ExchangeRate[]> {
     return this.db.collection('exchangeRates').find({}).sort({ _id: 1 }).toArray();
+  }
+
+  async getRewards(guid: string): Promise<any> {
+    let rewards = await this.db.collection('rewards').findOne({ guid: guid });
+    return rewards;
+
+  }
+
+  getRewardsReport(): Promise<RewardsReport[]> {
+    return this.db.collection('rewardsReportLeaderboard').find({}).sort({ profitLoss: -1 }).toArray();
   }
 
   saveClientMessage(message: ClientMessage, tableId: string, guid: string): Promise<any> {
@@ -577,10 +695,5 @@ export class DataRepository implements IDataRepository {
 
   }
 
-  async getRewards(guid: string): Promise<any> {
-    let rewards = await this.db.collection('rewards').findOne({ guid: guid });
-    return rewards;
-
-  }
 
 }
