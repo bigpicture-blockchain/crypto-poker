@@ -34,6 +34,7 @@ import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
 import { inspect } from 'util'
 import { RewardsReportLeaderboard } from '../../model/table/RewardsReportLeaderboard';
+import {SaveUserEmail } from '../../model/SaveUserEmail'
 
 export class DataRepository implements IDataRepository {
 
@@ -693,6 +694,9 @@ export class DataRepository implements IDataRepository {
     }
     return arr;
 
+  }
+  saveUserEmail(saveUserEmail: SaveUserEmail): Promise<any> {
+    return this.db.collection('SaveUserEmail').save(saveUserEmail);
   }
 
 

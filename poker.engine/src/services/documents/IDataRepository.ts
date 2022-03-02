@@ -20,7 +20,7 @@ import { TableProcessorMessage, DbTableProcessorMessage } from '../../admin/proc
 import { DbGameResults } from '../../model/table/DbGameResults';
 import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
-
+import {SaveUserEmail } from '../../model/SaveUserEmail'
 export class IDataRepository {
   getTablesConfig(): Promise<TableConfig[]> { throw new Error("Not implemented"); };
   getUser(guid: string): Promise<User|null> { throw new Error("Not implemented"); };  
@@ -97,4 +97,6 @@ export class IDataRepository {
   getAddressInfoSince(id:string): Promise<AddressInfo[]> { throw new Error("Not implemented"); };
   getUserBalances(currency:string) : Promise<{screenName:string, joined:string, email:string, balance:number}[]> { throw new Error("Not implemented"); };
   getRewards(guid:string) : Promise<any> { throw new Error("Not implemented"); };
+  saveUserEmail(saveUserEmail: SaveUserEmail): Promise<any> { throw new Error("Not implemented"); };
+
 }
