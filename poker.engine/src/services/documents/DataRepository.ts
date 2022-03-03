@@ -270,6 +270,9 @@ export class DataRepository implements IDataRepository {
           currentMission = 4;
         }
       }
+      else if (tempReport.currentMission == 4) {
+          currentMission = 4;
+      }
       let totProfitLoss = lastProfitLoss + addProfitLoss;
 
       update = {
