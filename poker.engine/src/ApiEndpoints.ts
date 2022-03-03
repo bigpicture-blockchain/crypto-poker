@@ -1,7 +1,9 @@
+import { Db, Server } from 'mongodb';
 import { PokerProcessor } from "./poker-processor";
 import { WebSocketHandle } from "./model/WebSocketHandle";
 import express = require('express');
 var bodyParser = require('body-parser');
+import { TableConfig } from './model/TableConfig';
 import http = require('http');
 var expressValidator = require('express-validator');       // https://npmjs.org/package/express-validator
 var cors = require('cors');
@@ -19,10 +21,14 @@ import { BlockCypherPaymentEvent } from "./admin/model/outgoing/BlockCypherPayme
 import { GameServerProcessor } from "./admin/processor/GameServerProcessor";
 import { getUserData } from "./helpers";
 import {SaveUserEmail } from './model/SaveUserEmail'
+import { DbGameResults } from './model/table/DbGameResults';
+import { RewardsDetails } from './model/table/RewardsDetails';
 // import {  Db  } from 'mongodb';
 export class ApiEndpoints {
 
-
+    db: Db;
+    dbName: string = "PokerGameServer";
+  
     app: any;
     server: any;
     wss: any;
@@ -31,7 +37,8 @@ export class ApiEndpoints {
     resetRequestHandler: ResetRequestHandler;
 
     constructor(private dataRepository: IDataRepository, private pokerProcessor: PokerProcessor, private connectionToPaymentServer: IConnectionToPaymentServer, private processor: GameServerProcessor) {
-
+        this.server = new Server(process.env.mongoDBHost, 27017);
+        this.db = new Db(this.dbName, this.server, {});
     }
 
     setup() {
@@ -116,8 +123,24 @@ export class ApiEndpoints {
             res.send({ success: success, country: country });
         });
 
-
-
+        app.get('/api/tables', async (req:any, res:any) => {
+            let arr:TableConfig[] = [];
+            if(req.query.tournamentId){
+              let states = await this.dataRepository.getTableStates({ tournamentId:req.query.tournamentId });
+              let count = 0;
+              for(let state of states){
+                count++;
+                let config = new TableConfig();
+                config._id = state._id+'';
+                config.name = `Table ${count}`;
+                arr.push(config)
+              }
+            }else{
+              arr = await this.dataRepository.getTablesConfig();
+            }
+            res.send(arr);
+          });    
+      
 
         // POST method route
         var paymentCallbackIndex: number = 1;

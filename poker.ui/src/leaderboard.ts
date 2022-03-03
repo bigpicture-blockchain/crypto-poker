@@ -40,7 +40,8 @@ export class Leaderboard {
         handTwoPairs: result.handTwoPairs,
         handOnePair: result.handOnePair,
         missionProgress: result.missionProgress,
-        percentile: result.percentile
+        percentile: result.percentile,
+        handsPlayed: result.handsPlayed
      };
  
       
@@ -181,4 +182,5 @@ interface IRewardsReportView {
   handOnePair: number;
   missionProgress: number;
   percentile: number;
+  handsPlayed: number;
 }

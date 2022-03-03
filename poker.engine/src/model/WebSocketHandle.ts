@@ -96,9 +96,6 @@ export class WebSocketHandle implements ISubscriber {
     data.user = await getUserData(user, dataRepository, initialData);
     this.send(data);
   }
-
-
-
 }
 
 

@@ -301,12 +301,12 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
       }
     }
     ///==========================TO BE REMOVED======================= 2022-02-28 TMP TEST SOCKET REWARDS
-    let dc = new DataContainer();
-    console.log(dc);
-    dc.rewardsReportResult = new RewardsReportResult();
-    dc.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
-    // console.log(dc.rewardsReportResult.rewards);
-    wsHandle.send(dc);
+    // let dc = new DataContainer();
+    // console.log(dc);
+    // dc.rewardsReportResult = new RewardsReportResult();
+    // dc.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+    // // console.log(dc.rewardsReportResult.rewards);
+    // wsHandle.send(dc);
     ///==========================TO BE REMOVED======================= 2022-02-28 TMP TEST SOCKET REWARDS
   }
 
@@ -382,13 +382,14 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
       data.accountSettings = handlerUtils.getAccountSettingsResult(wsHandle);
       wsHandle.send(data);
     }
-    else if (data.rewardsReportRequest != null) {
-      let dc = new DataContainer();
-      dc.rewardsReportResult = new RewardsReportResult();
-      dc.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
-      console.log(dc.rewardsReportResult.rewards);
-      wsHandle.send(dc);
-    }
+    // else if (data.rewardsReportRequest != null) {
+      //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++REMOVE
+      // let dc = new DataContainer();
+      // dc.rewardsReportResult = new RewardsReportResult();
+      // dc.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+      // console.log(dc.rewardsReportResult.rewards);
+      // wsHandle.send(dc);
+    // }
     else if (data.exchangeRatesRequest != null) {
       let dc = new DataContainer();
       //dc.leaderboardResult = new LeaderboardResult();

@@ -1,14 +1,16 @@
 ﻿export class RewardsReport {
   guid: string;
+  date: Date;
   profitLoss: number;
-  handOnePair: number;
-  handTwoPairs: number;
   seeFlop: number;
   seeTurn: number;
   seeRiver: number;
   winHand: number;
-  handsPlayed: number;
+  handOnePair: number;
+  handTwoPairs: number;
+  position: number;
+  percentile: number;
   currentMission: number;
   missionProgress: number;
-  percentile: number;
+  handsPlayed: number;
 }

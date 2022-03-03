@@ -1,6 +1,14 @@
 <template>
   <require from="./lib/number-format"></require>
   <require from="./lib/crypto-format"></require>
+  
+  <style>
+    td { 
+      background: black;
+      color: white;
+    }
+    </style>
+  
   <div id="leaderboard-container">
     
     
@@ -11,6 +19,7 @@
           <thead>
             <tr>
               <th>User</th>
+              <th>Hands Played</th>          
               <th>PL$</th>          
               <th>FlopSeen</th>
               <th>TurnSeen</th>
@@ -26,7 +35,8 @@
           <tbody>
             <tr repeat.for="rew of rewards">
               <td><span class="table-currency"></span>${rew.guid}</td>  
-              <td><span class="table-currency"></span>${rew.profitLoss}</td>              
+              <td><span class="table-currency"></span>${rew.handsPlayed}</td>  
+              <td><span class="table-currency"></span>${rew.profitLoss/100}</td>              
               <td><span class="table-currency"></span>${rew.seeFlop}</td>              
               <td><span class="table-currency"></span>${rew.seeTurn}</td>              
               <td><span class="table-currency"></span>${rew.seeRiver}</td>              

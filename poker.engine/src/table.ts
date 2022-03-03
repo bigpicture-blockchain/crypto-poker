@@ -212,8 +212,14 @@ export class Table {
     let players = this.players.filter(p => !p.sitOutNextHand && !p.isDisconnected);
     return players;
   }
+// ++++++++++++++++++++ changed to async / to be fixed
+  async handleGameStartingEvent() {
 
-  handleGameStartingEvent() {
+      let dcx = new DataContainer();
+      dcx.rewardsReportResult = new RewardsReportResult();
+      dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+      
+      this.sendDataContainer(dcx);
 
     let startDelay = this.gameStartDelaySec;
     let data = new DataContainer();
@@ -316,6 +322,8 @@ export class Table {
   }
 
   dealHoleCards() {
+    this.playersSeenStreet();
+    
     if (this.shutdownRequested) {
       this.broadcastShutdown();
       return;

@@ -34,12 +34,12 @@ import { Decimal } from '../../../../poker.ui/src/shared/decimal';
 import { QueryMeta } from './QueryMeta';
 import { inspect } from 'util'
 import { RewardsReportLeaderboard } from '../../model/table/RewardsReportLeaderboard';
-import {SaveUserEmail } from '../../model/SaveUserEmail'
+import { SaveUserEmail } from '../../model/SaveUserEmail'
 
 export class DataRepository implements IDataRepository {
 
-  
-  
+
+
 
   private server: Server;
   db: Db;
@@ -51,6 +51,7 @@ export class DataRepository implements IDataRepository {
   }
 
   init() {
+    DataRepository.percentil = [10, 30, 50];
     this.server = new Server(process.env.mongoDBHost, 27017);
     this.db = new Db(this.dbName, this.server, {});
     return this.db.open();
@@ -210,6 +211,8 @@ export class DataRepository implements IDataRepository {
 
   async updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string) {
     // DataRepository.percentil = await this.fillPercentile();
+    let percentil = DataRepository.percentil;
+
     let Missions = {
       level1: {
         seeFlop: 20,
@@ -228,14 +231,16 @@ export class DataRepository implements IDataRepository {
         seeRiver: 50
       }
     }
-    let  collection = this.db.collection('rewardsReportLeaderboard');
+    let collection = this.db.collection('rewardsReportLeaderboard');
+    let collectionU = this.db.collection('rewardsReportLeaderboard');
+
     const query = { guid: guid };
     let tempReport = await collection.findOne(query);
     let addProfitLoss = rewardsDetails.profitLoss
     let addOnePair = rewardsDetails.handRank == 2 ? 1 : 0;
     let addTwoPairs = rewardsDetails.handRank == 3 ? 1 : 0;
-    let addSeeFlop = rewardsDetails.lastStreet == ("flop" || "turn" || "river") ? 1 : 0;
-    let addSeeTurn = rewardsDetails.lastStreet == ("turn" || "river") ? 1 : 0;
+    let addSeeFlop = (rewardsDetails.lastStreet == "flop" || rewardsDetails.lastStreet == "turn" || rewardsDetails.lastStreet == "river") ? 1 : 0;
+    let addSeeTurn = (rewardsDetails.lastStreet == "turn" || rewardsDetails.lastStreet == "river") ? 1 : 0;
     let addSeeRiver = rewardsDetails.lastStreet == "river" ? 1 : 0;
     let addWinHand = rewardsDetails.winHand ? 1 : 0;
     let update, lastProfitLoss, lastHandOnePair, lastHandTwoPairs, lastSeeFlop, lastSeeTurn, lastSeeRiver, lastWinHand, currentMission, lastHandsPlayed;
@@ -251,66 +256,95 @@ export class DataRepository implements IDataRepository {
       let completedmission = 0;
       let maxmission = tempReport.missionProgress;
       let currentMission = 1;
-      
-      if (tempReport.currentMission == 1)  {
-        if (tempReport.seeFlop>Missions.level1.seeFlop || tempReport.seeTurn>=Missions.level1.seeTurn || tempReport.seeRiver15 >=Missions.level1.seeRiver) {          
+
+      if (tempReport.currentMission == 1) {
+        if (tempReport.seeFlop > Missions.level1.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver >= Missions.level1.seeRiver) {
           currentMission = 2;
         }
-      } else if (tempReport.currentMission == 2 ) {
-        if (tempReport.winHand>Missions.level2.winHand || tempReport.handOnePair>=Missions.level2.handOnePair || tempReport.handTwoPairs >=Missions.level2.handTwoPairs) {          
+      } else if (tempReport.currentMission == 2) {
+        if (tempReport.winHand > Missions.level2.winHand || tempReport.handOnePair >= Missions.level2.handOnePair || tempReport.handTwoPairs >= Missions.level2.handTwoPairs) {
           currentMission = 3;
         }
-      } else if (tempReport.currentMission == 3 ) {
-        if (tempReport.seeFlop>Missions.level1.seeFlop || tempReport.seeTurn>=Missions.level1.seeTurn || tempReport.seeRiver15 >=Missions.level1.seeRiver) {          
+      } else if (tempReport.currentMission == 3) {
+        if (tempReport.seeFlop > Missions.level1.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver15 >= Missions.level1.seeRiver) {
           currentMission = 4;
         }
       }
       let totProfitLoss = lastProfitLoss + addProfitLoss;
-      // console.log(perce);
-      switch(totProfitLoss) {
 
-
-
-      }
-     
       update = {
         $set: {
           guid: guid, profitLoss: totProfitLoss, handOnePair: lastHandOnePair + addOnePair,
           handTwoPairs: lastHandTwoPairs + addTwoPairs, seeFlop: lastSeeFlop + addSeeFlop, seeTurn: lastSeeTurn + addSeeTurn, seeRiver: lastSeeRiver + addSeeRiver,
           winHand: lastWinHand + addWinHand, currentMission: currentMission, handsPlayed: lastHandsPlayed + 1
-        } 
+        }
       }
-      collection.updateOne(query, update);
+      collectionU.updateOne(query, update);
     } else {
       update = {
         guid: guid, profitLoss: addProfitLoss, handOnePair: addOnePair,
         handTwoPairs: addTwoPairs, seeFlop: addSeeFlop, seeTurn: addSeeTurn, seeRiver: addSeeRiver,
-        winHand: addWinHand, currentMission: currentMission
-      } 
-      collection.insertOne(update);
+        winHand: addWinHand, currentMission: currentMission, handsPlayed: 1
+      }
+      collectionU.insertOne(update);
     }
 
   }
 
   async fillPercentile() {
-    let perc = Number;
     let colRewardsReport = this.db.collection('rewardsReportLeaderboard');
-    let positions = await colRewardsReport.find().toArray(function(err, result) {
+    let positions = await colRewardsReport.find().toArray(async function (err, result) {
       if (err) throw err;
       let percPl = [];
       for (let counter = 0; counter < result.length; counter++) {
         console.log(result[counter].profitLoss);
         percPl.push(result[counter].profitLoss);
       }
-      perc = percentile([10,25,40,60,75,90],percPl);    
-      return perc;  
+      DataRepository.percentil = await percentile([10, 25, 40, 60, 75, 90], percPl);
+      let playerPosition : Number = 0;
+      let totProfitLoss: Number;
+      let percentil = DataRepository.percentil;
+      let playerPercentile = 0;
+      for (let counter = 0; counter<result.length; counter++) {
+        totProfitLoss = result[counter].profitLoss;
+        switch (true) {
+          case (totProfitLoss >= percentil[5]): {
+            playerPercentile = 10;
+            break;
+          }
+          case (totProfitLoss >= percentil[4]): {
+            playerPercentile = 25;
+            break;
+          }
+          case (totProfitLoss >= percentil[3]): {
+            playerPercentile = 40;
+            break;
+          }
+          case (totProfitLoss >= percentil[2]): {
+            playerPercentile = 60;
+            break;
+          }
+          case (totProfitLoss >= percentil[1]): {
+            playerPercentile = 75;
+            break;
+          }
+          case (totProfitLoss >= percentil[0]): {
+            playerPercentile = 90;
+            break;
+          }
+          default:
+            playerPercentile = 100;
+          // DataRepository.percentil = percentile([10,25,40,60,75,90],percPl);    
+        }
+        const query = { guid: result[counter].guid };
+        let update = {
+          $set: {
+            percentile: playerPercentile
+          }
+        }
+        colRewardsReport.updateOne(query, update);
+      }
     });
-    
-    
-    // let profitList = [];
-    // const allValues = await positions.forEach(console.dir);
-    // for (let counter=0;counter<colRewardReports.length; counter++) {
-    // }
   }
 
 

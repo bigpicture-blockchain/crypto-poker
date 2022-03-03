@@ -4,14 +4,14 @@ const configs: TableConfig[] = [
     {
         "_id": undefined,
         "name": "Palermo",
-        "smallBlindUsd": 1,
-        "bigBlindUsd": 2,
+        "smallBlindUsd": 0.1,
+        "bigBlindUsd": 0.2,
         "currency": "usd",
         "maxPlayers": 9,
-        "timeToActSec": 60,
+        "timeToActSec": 30,
         "orderIndex": 1,
-        "maxBuyIn": 100,
-        "rake": 1
+        "maxBuyIn": 1000,
+        "rake": 0.1
     },
     {
         "_id": undefined,

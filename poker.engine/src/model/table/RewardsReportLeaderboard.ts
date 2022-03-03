@@ -1,6 +1,6 @@
 export class RewardsReportLeaderboard {
-    date: Date;
     guid: string;
+    date: Date;
     profitLoss: number;
     seeFlop: number;
     seeTurn: number;
@@ -8,7 +8,7 @@ export class RewardsReportLeaderboard {
     winHand: number;
     handOnePair: number; // rank = 2
     handTwoPairs: number; // rank = 3
-    position: number; 
+    position: number;
     percentile: number;
     currentMission: number;
     missionProgress: number;
