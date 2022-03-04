@@ -1605,4 +1605,52 @@ ux-dialog {
     font-size:28px;    
 }
 
+.mission-table{
+   
+    height: 300px;
+    width: 370px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.5);
+  
+}
+.mission-table-header {
+  
+  
+    border-radius: 4px 4px 0 0;
+    background-color: #000000;
+  
+}
+
+.mission-table-header-heading {
+    // height: 42px;
+    // width: 130px;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 38px;
+    margin-left: 10px;
+}
+.mission-content-label {
+    // height: 23.5px;
+    // width: 151px;
+    color: #9A9A9A;
+    font-family: "Open Sans";
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 28px;
+    }
+
+    .mission-content-div{
+      margin-left: 39px;
+      margin-top: 15px;
+    }
+    .mission-content-div-section1{
+      
+    }
+    .mission-content-div-section2{
+       
+    }
+
 
