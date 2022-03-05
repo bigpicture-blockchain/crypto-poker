@@ -25,10 +25,6 @@ export class Leaderboard {
     // this.rewards.length=0;
     this.rewards = [];
     for (let result of data.rewards || []) {
-      // this.rewards.length=0
-      
-      console.log(data.rewards);
-      console.log(result);
       let view: IRewardsReportView = {
         guid: "anon" + result.guid.substring(0,4),
         profitLoss: result.profitLoss,
@@ -43,53 +39,10 @@ export class Leaderboard {
         percentile: result.percentile,
         handsPlayed: result.handsPlayed
      };
- 
-      
-      // view.profitLoss = result.profitLoss;
-      // view.guid = result.guid;
-      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + view);
       this.rewards.push(view);
     }
-    console.log("=======================================================================");
-    console.log("============================REWARDS==========================================");
-    console.log(this.rewards);
 
-    // for (let result of data.rewards || []) {
-    //   let view: IRewardsReportView = {
-    //     profitLoss: result.profitLoss,
-    //     seeTurn: result.seeTurn
-
-    //   };
-    //   if (result.profitLoss) {
-    //     view.profitLoss = result.profitLoss;
-    //   }
-
-
-    //   let existingView = this.rates.find(r => r.currency === view.currency);
-    //   if (existingView) {
-    //     existingView.percentChange = view.percentChange;
-    //     existingView.price = view.price;
-    //     existingView.changed = true;
-
-    //   } else {
-    //     this.rates.push(view);
-    //   }
-    // }
-
-
-
-    //   let existingView = this.rates.find(r=>r.currency===view.currency);      
-    //   if(existingView){
-    //     existingView.percentChange = view.percentChange;
-    //     existingView.price = view.price;        
-    //     existingView.changed = true;
-
-    //   }else{          
-    //     this.rates.push(view);
-    //   }
-    // }
-
-    // setTimeout(()=>{
+   // setTimeout(()=>{
     //   for(let u of this.rates)
     //     u.changed = false;
     // },2000);

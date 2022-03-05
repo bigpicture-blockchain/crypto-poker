@@ -82,10 +82,6 @@ export class PokerTable {
     for (let i = 0; i < 9; i++) {
       this.seats.push(new Seat(this.ea, util, this.constants, i, this.apiService));
     }
-    //console.log(new Decimal('0.01').add(new Decimal('0.02')).toString());
-    //this.game = new Game();
-    //this.game.potResults = [];    
-    //this.game.potResults.push({ seatWinners: [5, 9], winningHand : '3 of a Kind'});
 
     this.subscriptions.push(ea.subscribe(SitDownAction, msg => { this.join(msg.seatIndex); }));
     this.subscriptions.push(ea.subscribe(DataMessageEvent, msg => { this.onMessage(msg.data); }));
