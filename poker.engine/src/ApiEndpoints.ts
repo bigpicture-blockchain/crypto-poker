@@ -18,6 +18,7 @@ import { AdminSecureSocketService, IConnectionToPaymentServer } from './admin/Ad
 import { BlockCypherPaymentEvent } from "./admin/model/outgoing/BlockCypherPaymentEvent";
 import { GameServerProcessor } from "./admin/processor/GameServerProcessor";
 import { getUserData } from "./helpers";
+import {SaveUserEmail } from './model/SaveUserEmail'
 
 export class ApiEndpoints {
 
@@ -133,6 +134,14 @@ export class ApiEndpoints {
             });
             
 
+        });
+        app.post('/api/saveEmail', async (req: any, res: any) => {
+            let saveUserEmail = new SaveUserEmail()
+            saveUserEmail.userEmail=req.body.userEmail
+            saveUserEmail.userSolanaAdd=req.body.userSolanaAdd
+            saveUserEmail.createdDate=new Date();
+            this.dataRepository.saveUserEmail(saveUserEmail)
+            res.send({ success: "success" });
         });
 
         
