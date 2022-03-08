@@ -475,7 +475,7 @@ class ProtobufConfig {
     rewardsReport.add(new Field("winHand", 8, "int32"));
     rewardsReport.add(new Field("currentMission", 9, "int32"));
     rewardsReport.add(new Field("missionProgress", 10, "int32"));
-    rewardsReport.add(new Field("percentile", 11, "int32"));
+    rewardsReport.add(new Field("percentile", 11, "double"));
     rewardsReport.add(new Field("handsPlayed", 12, "int32"));
     this.namespace.add(rewardsReport);
 
