@@ -6,7 +6,6 @@ $cdn: '';
 
 body {  
   font-family: 'Roboto Condensed', sans-serif;
-  padding-top: 50px;  
 }
 .navbar-default {
   background-color: lightcyan;
@@ -1167,11 +1166,14 @@ color:green;
 }
 .chatRow {
     margin: 0;
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 28px;
 }
-.chatScreenName {
-    color: red;
-    font-weight: bold;
-}
+ 
 .chatDealer {
   color: aqua;
   font-weight: bold;
@@ -1353,9 +1355,25 @@ ux-dialog {
     // background-image: url('images/troll.png');
     // background-position: left;
     // background-repeat: no-repeat;     
+    color: #FFFFFF;
+    font-family: "Open Sans";
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 28px;
 }
 .global-chatbox-header{
-    width: 350px;
+    // width: 350px;
+}
+.global-chat-input{
+  box-sizing: border-box;
+  height: 31px;
+  width: 331px;
+  border: 1px solid #6C6C6C;
+  border-radius: 4px;
+  background-color: #000000;
+  margin-left: 10px;
+  margin-bottom: 10px;
 }
 .clear {
     clear: both;
@@ -1376,7 +1394,7 @@ ux-dialog {
     height: 100%;  
     opacity: .08; 
     z-index: -1;
-    background: url($cdn + 'images/troll.jpg') no-repeat;
+    // background: url($cdn + 'images/troll.jpg') no-repeat;
     overflow:hidden;
   }
   ::-webkit-scrollbar
