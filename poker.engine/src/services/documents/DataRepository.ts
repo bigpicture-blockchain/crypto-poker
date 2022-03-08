@@ -257,29 +257,43 @@ export class DataRepository implements IDataRepository {
       let maxmission = tempReport.missionProgress;
       let currentMission = 1;
 
+      let missionProgress = 0;
+
       if (tempReport.currentMission == 1) {
+        missionProgress = tempReport.seeFlop / Missions.level1.seeFlop;
+        if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn }
+        if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver }
         if (tempReport.seeFlop > Missions.level1.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver >= Missions.level1.seeRiver) {
           currentMission = 2;
         }
       } else if (tempReport.currentMission == 2) {
+        missionProgress = tempReport.winHand / Missions.level2.winHand;
+        if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair }
+        if (tempReport.seeRiver / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs }
         if (tempReport.winHand > Missions.level2.winHand || tempReport.handOnePair >= Missions.level2.handOnePair || tempReport.handTwoPairs >= Missions.level2.handTwoPairs) {
           currentMission = 3;
         }
       } else if (tempReport.currentMission == 3) {
-        if (tempReport.seeFlop > Missions.level1.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver15 >= Missions.level1.seeRiver) {
+        missionProgress = tempReport.seeFlop / Missions.level3.seeFlop;
+        if (tempReport.handOnePair / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn }
+        if (tempReport.seeRiver / Missions.level3.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver }
+        if (tempReport.seeFlop > Missions.level3.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver >= Missions.level3.seeRiver) {
           currentMission = 4;
         }
       }
       else if (tempReport.currentMission == 4) {
-          currentMission = 4;
+        missionProgress = 100;
+        currentMission = 4;
       }
+      missionProgress*=100;
+      missionProgress > 100 ? missionProgress = 100 : missionProgress = Math.round(missionProgress);
       let totProfitLoss = lastProfitLoss + addProfitLoss;
 
       update = {
         $set: {
           guid: guid, profitLoss: totProfitLoss, handOnePair: lastHandOnePair + addOnePair,
           handTwoPairs: lastHandTwoPairs + addTwoPairs, seeFlop: lastSeeFlop + addSeeFlop, seeTurn: lastSeeTurn + addSeeTurn, seeRiver: lastSeeRiver + addSeeRiver,
-          winHand: lastWinHand + addWinHand, currentMission: currentMission, handsPlayed: lastHandsPlayed + 1
+          winHand: lastWinHand + addWinHand, currentMission: currentMission, handsPlayed: lastHandsPlayed + 1, missionProgress: missionProgress
         }
       }
       collectionU.updateOne(query, update);
@@ -304,39 +318,39 @@ export class DataRepository implements IDataRepository {
         percPl.push(result[counter].profitLoss);
       }
       DataRepository.percentil = await percentile([10, 25, 40, 60, 75, 90], percPl);
-      let playerPosition : Number = 0;
+      let playerPosition: Number = 0;
       let totProfitLoss: Number;
       let percentil = DataRepository.percentil;
       let playerPercentile = 0;
-      for (let counter = 0; counter<result.length; counter++) {
+      for (let counter = 0; counter < result.length; counter++) {
         totProfitLoss = result[counter].profitLoss;
         switch (true) {
           case (totProfitLoss >= percentil[5]): {
-            playerPercentile = 10;
+            playerPercentile = 2;
             break;
           }
           case (totProfitLoss >= percentil[4]): {
-            playerPercentile = 25;
+            playerPercentile = 1.5;
             break;
           }
           case (totProfitLoss >= percentil[3]): {
-            playerPercentile = 40;
+            playerPercentile = 1.25;
             break;
           }
           case (totProfitLoss >= percentil[2]): {
-            playerPercentile = 60;
+            playerPercentile = 1;
             break;
           }
           case (totProfitLoss >= percentil[1]): {
-            playerPercentile = 75;
+            playerPercentile = 0.5;
             break;
           }
           case (totProfitLoss >= percentil[0]): {
-            playerPercentile = 90;
+            playerPercentile = 0.2;
             break;
           }
           default:
-            playerPercentile = 100;
+            playerPercentile = 0.1;
           // DataRepository.percentil = percentile([10,25,40,60,75,90],percPl);    
         }
         const query = { guid: result[counter].guid };
