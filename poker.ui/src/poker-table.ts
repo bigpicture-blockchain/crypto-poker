@@ -74,7 +74,8 @@ export class PokerTable {
   nextBlinds:{smallBlind:number, bigBlind:number, timeUntil:number, timeUntilUnit:string};  
   blindsTimer:number;  
   nextBlindIncrease:Date;
-  
+  missionData:any[]=[];
+  rewards: any[] = [];
   constructor(apiService: ApiService, private dialogService: DialogService, private ea: EventAggregator, private util: Util, private constants: Constants, private dialogController: DialogController, private router: Router) {
     this.apiService = apiService;
     
@@ -82,6 +83,10 @@ export class PokerTable {
     for (let i = 0; i < 9; i++) {
       this.seats.push(new Seat(this.ea, util, this.constants, i, this.apiService));
     }
+      this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:10,barWidth:`${10}%`})
+      this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
+      this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
+
 
     this.subscriptions.push(ea.subscribe(SitDownAction, msg => { this.join(msg.seatIndex); }));
     this.subscriptions.push(ea.subscribe(DataMessageEvent, msg => { this.onMessage(msg.data); }));
@@ -90,6 +95,41 @@ export class PokerTable {
     this.subscriptions.push(ea.subscribe(OpenLoginPopupEvent, msg => { this.openLoginWindow(msg); }));    
     this.subscriptions.push(ea.subscribe(TournamentRegisterClickEvent, msg => { this.onTournamentRegisterClickEvent(msg); }));    
     this.subscriptions.push(ea.subscribe(DepositNowEvent, msg => { this.openFundingWindow(msg.model); }));    
+    this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
+  }
+  handleRewardsReportResult(data: RewardsReportResult) {
+    // this.rewards.length=0;
+    console.log("=====================",this.userData);
+    alert(1)
+    this.rewards = [];
+    let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
+    this.missionData=[]
+    this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:dataForLoggedInUser.seeFlop,barWidth:`${10}%`})
+   
+    this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
+   
+    this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
+    
+    for (let result of data.rewards || []) {
+      let view: any = {
+        guid: "anon" + result.guid.substring(0,4),
+        profitLoss: result.profitLoss,
+        currentMission: result.currentMission,
+        seeFlop: result.seeFlop,
+        seeTurn: result.seeTurn,
+        seeRiver: result.seeRiver,
+        winHand: result.winHand,
+        handTwoPairs: result.handTwoPairs,
+        handOnePair: result.handOnePair,
+        missionProgress: result.missionProgress,
+        percentile: result.percentile,
+        handsPlayed: result.handsPlayed
+     };
+      this.rewards.push(view);
+    }
+
+    
+
   }
 
   detached() {
@@ -413,7 +453,8 @@ export class PokerTable {
     }
     this.userData = userData;
     this.util.user = userData;
-    this.setPlayerStack();              
+    this.setPlayerStack();      
+    console.log("hello=====================",this.userData);        
   }
 
 

@@ -78,12 +78,15 @@ export class ApiEndpoints {
             let customData = (<any>request).customData;
             let guid: string;
             let loginFailed = customData.sid && !customData.guid;
+        console.log("hello-----------",customData);
 
             if (customData.guid) {
                 guid = customData.guid;
             }
             else if (!pokerProcessor.getCookie(request.headers, "guid") || loginFailed) {
-                guid = crypto.randomBytes(20).toString('hex');
+                console.log("-----------hello-----------",new URL("http://localhost+"+request.url).searchParams.get("guid"));
+                  guid=new URL("http://localhost+"+request.url).searchParams.get("guid")
+                // guid = crypto.randomBytes(20).toString('hex');
                 request.headers.cookie = `guid=${guid};isNewUser=1`;
             }
             if (guid) {
@@ -95,7 +98,7 @@ export class ApiEndpoints {
 
             let handle: WebSocketHandle = await pokerProcessor.connection(socket, httpReq)
             if (handle) {
-
+                
                 logger.info(`${handle.user.screenName}:${handle.id} connected from ${handle.ipAddress} ${handle.country}. app_version:${httpReq.customData.version}  clients.length: ${pokerProcessor.clients.length}`);
 
 

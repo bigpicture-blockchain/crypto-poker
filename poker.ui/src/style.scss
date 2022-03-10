@@ -11,6 +11,7 @@ body {
 .navbar-default {
   background-color: lightcyan;
 }
+
 .nav-logo{
     background:url($cdn + 'images/logo.png') no-repeat;
     width: 340px;
@@ -1606,3 +1607,81 @@ ux-dialog {
 }
 
 
+.progress {
+  border-radius: 10px !important;
+  height:  12px !important;
+  width: 200px;
+}
+
+.progress-bar {
+  background: linear-gradient(270deg, #FAD55E 0%, #F7701F 100%);
+  border-radius: 7px ;
+}
+
+.progress_area{
+  display: flex;
+  align-items: center;
+}
+.daily_missions_header {
+  height: 42px;
+  border-radius: 4px 4px 0 0;
+  background-color: #000000;
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+}
+.daily_missions {
+  width: 370px;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.daily_missions_header_text {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+.info_header{
+    font-size: 15px;
+    margin-left: 10px;
+}
+.daily_missions_content{
+    padding: 20px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+}
+.daily_missions_content_title {
+  color: #9A9A9A;
+  font-family: "Open Sans";
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 28px;
+}
+.fire_mission_image{
+  height: 35px;
+  margin-left: 8px;
+  margin-top: -15px;
+  padding-right: 10px;
+}
+.daily_missions_content_number {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 28px;
+  text-align: center;
+  height: 16px;
+}
+.daily_missions_content_fire {
+  color: #FFA71B;
+  font-family: "Open Sans";
+  font-size: 10px;
+  letter-spacing: 0;
+  line-height: 28px;
+  text-align: center;
+}
