@@ -9,7 +9,7 @@ import { User } from "./model/User";
 import {
   DataContainer, AccountFunded, AccountWithdrawlResult, ChatMessage, UserData, Account,
   CashOutRequestResult, TxFee, PokerError, GetAccountSettingsResult, SetAccountSettingsResult, GlobalChatResult,
-  ChatMessageResult, GlobalUsers, UserStatus, LeaderboardResult, LeaderboardUser, TransferFundsResult, ExchangeRateResult, RewardsReportResult, CashOutAccount, Version, DuplicateIpAddress
+  ChatMessageResult, GlobalUsers, UserStatus, LeaderboardResult, LeaderboardUser, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, CashOutAccount, Version, DuplicateIpAddress
 } from "../../poker.ui/src/shared/DataContainer";
 import { ClientMessage, AccountWithdrawlRequest, SetAccountSettingsRequest, TransferFundsRequest, JoinTableRequest } from "../../poker.ui/src/shared/ClientMessage";
 import { Currency, CurrencyUnit } from "../../poker.ui/src/shared/Currency";
@@ -19,6 +19,7 @@ import { Payment } from "./model/Payment";
 import { IBroadcastService, IPokerTableProvider } from "./services/IBroadcastService";
 import { ExchangeRate } from "../../poker.ui/src/shared/ExchangeRate";
 import { RewardsReport } from "../../poker.ui/src/shared/RewardsReport";
+import { MissionReport } from "../../poker.ui/src/shared/MissionReport";
 import { Helpers, removeItem, toUserStatus, getUserData, setupTable, getIpAddress } from "./helpers";
 import { broadcast as broadcastFunc } from "./protobuf-helpers";
 var logger = require('log4js').getLogger();

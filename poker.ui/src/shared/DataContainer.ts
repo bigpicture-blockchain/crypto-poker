@@ -1,6 +1,7 @@
 import { TableViewRow } from './TableViewRow';
 import { ExchangeRate } from "./ExchangeRate";
 import { RewardsReport } from "./RewardsReport";
+import { MissionReport } from "./MissionReport";
 import { LoginResult, LogoutResult } from "./login-request";
 import { RegisterResult } from "./signup-request";
 import { TournamentViewRow } from "./tournmanet-view-row";
@@ -11,7 +12,7 @@ import { TournamentResultView } from './TournamentResultView';
 import { NextBlind } from './NextBlind';
 
 export class DataContainer {
-
+  [x: string]: any;
   loginResult: LoginResult;
   user: UserData;
   version: Version;
@@ -37,6 +38,7 @@ export class DataContainer {
   transferFundsResult: TransferFundsResult;
   exchangeRates: ExchangeRateResult;
   rewardsReportResult: RewardsReportResult;
+  missionReportResult: MissionReportResult;
   pong: Pong;
   logoutResult: LogoutResult;
   registerResult: RegisterResult;
@@ -76,6 +78,10 @@ export class ExchangeRateResult {
 
 export class RewardsReportResult {
   rewards: RewardsReport[];
+}
+
+export class MissionReportResult {
+  mission: MissionReport[];
 }
 
 export class TransferFundsResult {

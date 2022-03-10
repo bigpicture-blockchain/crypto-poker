@@ -15,7 +15,7 @@ import {Chip} from "./model/chip";
 import { Simulations } from "./simulations";
 import { CashOutRequestResult, PotResult, FundAccountResult, AccountFunded, AccountWithdrawlResult, SetTableOptionResult,
   GetAccountSettingsResult, SetAccountSettingsResult, ChatMessage, GlobalChatResult, ChatMessageResult, UserData, Account,
-  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
+  GlobalUsers, LeaderboardResult, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, TournamentSubscriptionResult, SubscribeTableResult, GameEvent, GameStartingEvent, PaymentHistoryResult, Version, TableSeatEvents, DealHoleCardsEvent, TableClosed, DataContainer, TableConfigs } from "./shared/DataContainer";
 import {AccountSettings} from "./account-settings";
 import {MessageWindow} from "./message-window";
 import {ClientMessage, SetTableOptionRequest, TournamentSubscriptionRequest, GlobalChatRequest, Ping, ListTablesRequest, JoinTableRequest, LeaveTableRequest, ChatRequest, ExchangeRatesRequest, RewardsReportRequest, TournamentRegisterRequest } from "./shared/ClientMessage";
@@ -332,6 +332,7 @@ export class PokerTable {
       { key: 'transferFundsResult', handler: (data: TransferFundsResult) => { this.ea.publish(Object.assign(new TransferFundsResult(), data)); } },
       { key: 'exchangeRates', handler: (data: ExchangeRateResult) => { this.ea.publish(Object.assign(new ExchangeRateResult(), data)); } },
       { key: 'rewardsReportResult', handler: (data: RewardsReportResult) => { this.ea.publish(Object.assign(new RewardsReportResult(), data)); } },
+      { key: 'missionReportResult', handler: (data: MissionReportResult) => { this.ea.publish(Object.assign(new MissionReportResult(), data)); } },
       { key: 'registerResult', handler: (data: RegisterResult) => { this.ea.publish(Object.assign(new RegisterResult(), data)); } },
       { key: 'tournamentSubscriptionResult', handler: (data) => { this.ea.publish(Object.assign(new TournamentSubscriptionResult(), data)); } },
       { key: 'loginResult', handler: this.handleLoginResult },

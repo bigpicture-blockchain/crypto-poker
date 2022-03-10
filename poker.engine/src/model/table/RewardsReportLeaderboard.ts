@@ -13,4 +13,24 @@ export class RewardsReportLeaderboard {
     currentMission: number;
     missionProgress: number;
     handsPlayed: number;
+    misProgress: {
+        a: number;
+        b: number;
+        c: number;
+    }
+    misPrBest: {
+        a: number;
+        b: number;
+        c: number;
+    }
+    misCount: {
+        a: number;
+        b: number;
+        c: number;
+    }
+    misTotalCount: {
+        a: number;
+        b: number;
+        c: number;
+    }
 }

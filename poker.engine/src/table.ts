@@ -3,7 +3,7 @@ import { CommonHelpers, getCardSuit, numberWithCommas } from '../../poker.ui/src
 import { AutoOptionResult } from '../../poker.ui/src/shared/AutoOptionResult';
 import {
   DataContainer, PokerError, GameStartingEvent, DealHoleCardsEvent, GameEvent, SubscribeTableResult, PotResult, TableSeatEvent,
-  SetTableOptionResult, ChatMessage, ChatMessageResult, TableClosed, LeaderboardResult, LeaderboardUser, BlindsChangingEvent, TableSeatEvents, TableConfigs, RewardsReportResult
+  SetTableOptionResult, ChatMessage, ChatMessageResult, TableClosed, LeaderboardResult, LeaderboardUser, BlindsChangingEvent, TableSeatEvents, TableConfigs, RewardsReportResult, MissionReportResult
 } from "../../poker.ui/src/shared/DataContainer";
 import { WebSocketHandle } from "./model/WebSocketHandle";
 import { Deck } from "./deck";
@@ -39,6 +39,7 @@ import { DbPlayerAllocationResult } from './model/table/DbPlayerAllocationResult
 import { DbHandEvaluatorResult } from './model/table/DbHandEvaluatorResult';
 import { JoinTableRequest } from './model/table/JoinTableRequest';
 import { UserSmall } from './model/UserSmall';
+import { DataRepository } from './services/documents/DataRepository';
 
 export class Table {
 
@@ -212,15 +213,34 @@ export class Table {
     let players = this.players.filter(p => !p.sitOutNextHand && !p.isDisconnected);
     return players;
   }
-// ++++++++++++++++++++ changed to async / to be fixed
+  // ++++++++++++++++++++ changed to async / to be fixed
   async handleGameStartingEvent() {
+    let dcx = new DataContainer();
+    dcx.rewardsReportResult = new RewardsReportResult();
+    dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+    try {
+      let dcy = new DataContainer();
+      dcy.missionReportResult = new MissionReportResult();
+      // dcy.missionReportResult = await this.dataRepository.getMissionData();
+      //await this.dataRepository.getMissionData();
+      let a = [];
+      for (let counter = 0; counter < dcx.rewardsReportResult.rewards.length; counter++) {
+        a.push({
+          guid: dcx.rewardsReportResult.rewards[counter].guid,
+          misProgress: dcx.rewardsReportResult.rewards[counter].misProgress,
+          misPrBest: dcx.rewardsReportResult.rewards[counter].misPrBest,
+          misCount: dcx.rewardsReportResult.rewards[counter].misCount
+        })
+      }
+      dcy.missionReportResult.mission = a;
 
-      let dcx = new DataContainer();
-      dcx.rewardsReportResult = new RewardsReportResult();
-      dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
-      
       this.sendDataContainer(dcx);
+      this.sendDataContainerMission(dcy);
+    }
+    catch (e) {
+      console.log(e);
 
+    }
     let startDelay = this.gameStartDelaySec;
     let data = new DataContainer();
 
@@ -253,6 +273,7 @@ export class Table {
 
     this.sendDataContainer(data);
     this.timerProvider.startTimer(this.dealHoleCards.bind(this), startDelay * 1000, this);
+
   }
 
 
@@ -323,7 +344,7 @@ export class Table {
 
   dealHoleCards() {
     this.playersSeenStreet();
-    
+
     if (this.shutdownRequested) {
       this.broadcastShutdown();
       return;
@@ -608,6 +629,20 @@ export class Table {
   sendDataContainer(data: DataContainer): void {
     for (let subscriber of this.subscribers) {
       subscriber.send(data);
+    }
+  }
+
+  sendDataContainerMission(data: DataContainer): void {
+    for (let subscriber of this.subscribers) {
+      // let dx = await this.dataRepository.getMissionData(subscriber.user.guid);
+      for (let counter=0;counter<data.missionReportResult.mission.length; counter++) {
+        if (data.missionReportResult.mission[counter].guid === subscriber.user.guid) {
+          
+          // todo: assign dataS the single element of the array
+          
+          subscriber.send(dataS);
+        }
+      }
     }
   }
 
@@ -1179,7 +1214,7 @@ export class Table {
       await this.dataRepository.saveRewardsDetails(rewardsDetails);
       await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails, gameResultPlayers[counter01].guid);
     }
-    
+
     await this.dataRepository.saveGame(dbGame);
     await this.dataRepository.fillPercentile().catch(console.dir);
     let temp = await this.dataRepository.saveTableStates([this.getTableState()]);
@@ -1202,8 +1237,8 @@ export class Table {
       p.hasFolded = false;
       if (hasFolded)
         p.playing = false;
-        p.hasRaised = false;
-        p.hasCalled = false;
+      p.hasRaised = false;
+      p.hasCalled = false;
 
       let seatEvent = p.toTableSeatEvent();
       if (remainingPlayers.length > 1 && !hasFolded)
