@@ -83,10 +83,7 @@ export class PokerTable {
     for (let i = 0; i < 9; i++) {
       this.seats.push(new Seat(this.ea, util, this.constants, i, this.apiService));
     }
-      this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:10,barWidth:`${10}%`})
-      this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
-      this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
-
+  
 
     this.subscriptions.push(ea.subscribe(SitDownAction, msg => { this.join(msg.seatIndex); }));
     this.subscriptions.push(ea.subscribe(DataMessageEvent, msg => { this.onMessage(msg.data); }));
@@ -96,39 +93,66 @@ export class PokerTable {
     this.subscriptions.push(ea.subscribe(TournamentRegisterClickEvent, msg => { this.onTournamentRegisterClickEvent(msg); }));    
     this.subscriptions.push(ea.subscribe(DepositNowEvent, msg => { this.openFundingWindow(msg.model); }));    
     this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
+    this.subscriptions.push(ea.subscribe(MissionReportResult, (msg: MissionReportResult) => { this.handleMissionReportResult(msg) }));
+  }
+
+  handleMissionReportResult(data: MissionReportResult) {
+    console.log("mission data   =========================  ", data);
+    let allMissions = {
+      a: [
+        { value: 20, text: "See the flop" },
+        { value: 15, text: "See the turn" },
+        { value: 10, text: "See the river" }
+      ],
+      b: [
+        { value: 15, text: "Win the hand" },
+        { value: 20, text: "Get one pair" },
+        { value: 5, text: "Get two pairs" }
+      ],
+      c: [
+        { value: 50, text: "Win the hand" },
+        { value: 100, text: "See the flop" },
+        { value: 75, text: "See the turn" },
+        { value: 50, text: "See the river" }
+      ]
+    }
+    this.missionData=[]
+    
+    let userMission = data.mission.find(t => t.guid == this.userData.guid);
+
+    let mission1Name = `${allMissions.a[userMission.misPrBest.a - 1].text} (${userMission.misCount.a}/${allMissions.a[userMission.misPrBest.a - 1].value})`
+    this.missionData.push({ name: mission1Name, fireCount: 10, barWidth: `${userMission.misProgress.a}%` })
+    let mission2Name = `${allMissions.b[userMission.misPrBest.b - 1].text} (${userMission.misCount.b}/${allMissions.b[userMission.misPrBest.b - 1].value})`
+    this.missionData.push({ name: mission2Name, fireCount: 50, barWidth: `${userMission.misProgress.b}%` })
+    let mission3Name = `${allMissions.c[userMission.misPrBest.c - 1].text} (${userMission.misCount.c}/${allMissions.c[userMission.misPrBest.c - 1].value})`
+    this.missionData.push({ name: mission3Name, fireCount: 100, barWidth: `${userMission.misProgress.c}%` })
+
   }
   handleRewardsReportResult(data: RewardsReportResult) {
     // this.rewards.length=0;
-    console.log("=====================",this.userData);
-    alert(1)
-    this.rewards = [];
-    let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
-    this.missionData=[]
-    this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:dataForLoggedInUser.seeFlop,barWidth:`${10}%`})
-   
-    this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
-   
-    this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
-    
-    for (let result of data.rewards || []) {
-      let view: any = {
-        guid: "anon" + result.guid.substring(0,4),
-        profitLoss: result.profitLoss,
-        currentMission: result.currentMission,
-        seeFlop: result.seeFlop,
-        seeTurn: result.seeTurn,
-        seeRiver: result.seeRiver,
-        winHand: result.winHand,
-        handTwoPairs: result.handTwoPairs,
-        handOnePair: result.handOnePair,
-        missionProgress: result.missionProgress,
-        percentile: result.percentile,
-        handsPlayed: result.handsPlayed
-     };
-      this.rewards.push(view);
-    }
-
-    
+    // this.rewards = [];
+    // let dataForLoggedInUser=data.rewards.find(t=>t.guid==this.userData.guid);
+    // this.missionData=[]
+    // this.missionData.push({name:"Play 20 Flops (9/20)", fireCount:dataForLoggedInUser.seeFlop,barWidth:`${10}%`})
+    // this.missionData.push({name:"Win 10 Hands(9/20)", fireCount:50,barWidth:`${40}%`})
+    // this.missionData.push({name:"Get a Flush", fireCount:100,barWidth:`${60}%`})
+    // for (let result of data.rewards || []) {
+    //   let view: any = {
+    //     guid: "anon" + result.guid.substring(0,4),
+    //     profitLoss: result.profitLoss,
+    //     currentMission: result.currentMission,
+    //     seeFlop: result.seeFlop,
+    //     seeTurn: result.seeTurn,
+    //     seeRiver: result.seeRiver,
+    //     winHand: result.winHand,
+    //     handTwoPairs: result.handTwoPairs,
+    //     handOnePair: result.handOnePair,
+    //     missionProgress: result.missionProgress,
+    //     percentile: result.percentile,
+    //     handsPlayed: result.handsPlayed
+    //  };
+    //   this.rewards.push(view);
+    // }
 
   }
 

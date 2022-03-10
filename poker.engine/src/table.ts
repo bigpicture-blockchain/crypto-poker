@@ -640,7 +640,7 @@ export class Table {
           
           // todo: assign dataS the single element of the array
           
-          subscriber.send(dataS);
+          subscriber.send(data);
         }
       }
     }
