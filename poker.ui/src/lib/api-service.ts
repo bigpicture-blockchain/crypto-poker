@@ -23,10 +23,10 @@ export class ApiService {
 
   constructor(private ea: EventAggregator, private util: Util) {
     let protocol = location.protocol === 'https:' ? 'wss' : 'ws';   
-    // let port = environment.debug ? ':80' : '';
-    // let host = environment.debug ? environment.pokerUiWSUrl : window.location.hostname;     
-    let port = environment.debug ?':8111' : '';
-    let host = environment.debug ? 'localhost' : window.location.hostname;
+    let port = environment.debug ? ':80' : '';
+    let host = environment.debug ? environment.pokerUiWSUrl : window.location.hostname;     
+    // let port = environment.debug ?':8111' : '';
+    // let host = environment.debug ? 'localhost' : window.location.hostname;
 
     
     this.wsURI = `${protocol}://${host}${port}/ws`;    
