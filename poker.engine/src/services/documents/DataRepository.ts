@@ -8,7 +8,8 @@ import { User } from "../../model/User";
 import { GamePotResult } from "../../model/TexasHoldemGameState";
 import { ExchangeRate } from "../../../../poker.ui/src/shared/ExchangeRate";
 import { RewardsReport } from "../../../../poker.ui/src/shared/RewardsReport";
-import { ChatMessage, Account, } from "../../../../poker.ui/src/shared/DataContainer";
+import { MissionReport } from "../../../../poker.ui/src/shared/MissionReport";
+import { ChatMessage, Account, MissionReportResult } from "../../../../poker.ui/src/shared/DataContainer";
 import { Currency, CurrencyUnit } from "../../../../poker.ui/src/shared/Currency";
 import { PaymentType } from "../../../../poker.ui/src/shared/PaymentType";
 import { Payment } from "../../model/Payment";
@@ -217,7 +218,7 @@ export class DataRepository implements IDataRepository {
       level1: {
         seeFlop: 20,
         seeTurn: 15,
-        seeRiver: 15
+        seeRiver: 10
       },
       level2: {
         winHand: 15,
@@ -256,44 +257,44 @@ export class DataRepository implements IDataRepository {
       let completedmission = 0;
       let maxmission = tempReport.missionProgress;
       let currentMission = 1;
+      let misProgress = { a: 0, b: 0, c: 0 };
+      let misPrBest = { a: 0, b: 0, c: 0 };
+      let misCount = { a: 0, b: 0, c: 0 };
+      // let misPrTitle = { a: 0, b: 0, c: 0 };
 
       let missionProgress = 0;
 
-      if (tempReport.currentMission == 1) {
-        missionProgress = tempReport.seeFlop / Missions.level1.seeFlop;
-        if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn }
-        if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver }
-        if (tempReport.seeFlop > Missions.level1.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver >= Missions.level1.seeRiver) {
-          currentMission = 2;
-        }
-      } else if (tempReport.currentMission == 2) {
-        missionProgress = tempReport.winHand / Missions.level2.winHand;
-        if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair }
-        if (tempReport.seeRiver / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs }
-        if (tempReport.winHand > Missions.level2.winHand || tempReport.handOnePair >= Missions.level2.handOnePair || tempReport.handTwoPairs >= Missions.level2.handTwoPairs) {
-          currentMission = 3;
-        }
-      } else if (tempReport.currentMission == 3) {
-        missionProgress = tempReport.seeFlop / Missions.level3.seeFlop;
-        if (tempReport.handOnePair / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn }
-        if (tempReport.seeRiver / Missions.level3.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver }
-        if (tempReport.seeFlop > Missions.level3.seeFlop || tempReport.seeTurn >= Missions.level1.seeTurn || tempReport.seeRiver >= Missions.level3.seeRiver) {
-          currentMission = 4;
-        }
-      }
-      else if (tempReport.currentMission == 4) {
-        missionProgress = 100;
-        currentMission = 4;
-      }
-      missionProgress*=100;
-      missionProgress > 100 ? missionProgress = 100 : missionProgress = Math.round(missionProgress);
+      missionProgress = tempReport.seeFlop / Missions.level1.seeFlop; misPrBest.a = 1; misCount.a = tempReport.seeFlop;
+      if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn; misCount.a = tempReport.seeTurn; }
+      if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver; misPrBest.a = 2; misPrBest.a = 1; misCount.a = tempReport.seeRiver; }
+      misProgress.a = missionProgress;
+
+      missionProgress = tempReport.winHand / Missions.level2.winHand; misPrBest.b = 1; misCount.b = tempReport.winHand;
+      if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair; misPrBest.b = 2; misCount.b = tempReport.handOnePair; }
+      if (tempReport.handTwoPairs / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs; misPrBest.b = 3; misCount.b = tempReport.handTwoPairs; }
+      misProgress.b = missionProgress;
+
+      missionProgress = tempReport.winHand / Missions.level3.winHand; misPrBest.c = 1; misCount.c = tempReport.winHand;
+      if (tempReport.seeFlop / Missions.level3.seeFlop > missionProgress) { missionProgress = tempReport.seeFlop / Missions.level3.seeFlop; misPrBest.c = 2; misCount.c = tempReport.seeFlop; }
+      if (tempReport.seeTurn / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn; misPrBest.c = 3; misCount.c = tempReport.seeTurn; }
+      if (tempReport.seeRiver / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver; misPrBest.c = 4; misCount.c = tempReport.seeRiver; }
+      misProgress.c = missionProgress;
+      currentMission = 0;
+      misProgress.a *= 100;
+      misProgress.b *= 100;
+      misProgress.c *= 100;
+
+      misProgress.a > 100 ? misProgress.a = 100 : misProgress.a = Math.round(misProgress.a);
+      misProgress.b > 100 ? misProgress.b = 100 : misProgress.b = Math.round(misProgress.b);
+      misProgress.c > 100 ? misProgress.c = 100 : misProgress.c = Math.round(misProgress.c);
+
       let totProfitLoss = lastProfitLoss + addProfitLoss;
 
       update = {
         $set: {
           guid: guid, profitLoss: totProfitLoss, handOnePair: lastHandOnePair + addOnePair,
           handTwoPairs: lastHandTwoPairs + addTwoPairs, seeFlop: lastSeeFlop + addSeeFlop, seeTurn: lastSeeTurn + addSeeTurn, seeRiver: lastSeeRiver + addSeeRiver,
-          winHand: lastWinHand + addWinHand, currentMission: currentMission, handsPlayed: lastHandsPlayed + 1, missionProgress: missionProgress
+          winHand: lastWinHand + addWinHand, handsPlayed: lastHandsPlayed + 1, missionProgress: 0, misProgress: misProgress, misPrBest: misPrBest, misCount: misCount
         }
       }
       collectionU.updateOne(query, update);
@@ -305,7 +306,6 @@ export class DataRepository implements IDataRepository {
       }
       collectionU.insertOne(update);
     }
-
   }
 
   async fillPercentile() {
@@ -398,8 +398,29 @@ export class DataRepository implements IDataRepository {
   }
 
   getRewardsReport(): Promise<RewardsReport[]> {
-    return this.db.collection('rewardsReportLeaderboard').find({}).sort({ profitLoss: -1 }).toArray();
+    // let x = this.db.collection('rewardsReportLeaderboard').find({}, { guid:1, profitLoss:1, date:1, seeFlop:1, seeTurn:1, seeRiver:1, winHand:1, handOnePair:1, handTwoPairs:1, position:1, percentile:1, currentMission:1, missionProgress:1, handsPlayed:1 }).sort({ profitLoss: -1 }).toArray(); 
+    let x = this.db.collection('rewardsReportLeaderboard').find({}, {}).sort({ profitLoss: -1 }).toArray();
+    return x;
   }
+
+  // getMissionData(): Promise<MissionReport[]> {
+  //   let a = new Array();
+  //   //  return this.db.collection('rewardsReportLeaderboard').find({}).sort({ profitLoss: -1 }).toArray();
+  //   a.push({
+  //       guid: "x",
+  //       text: 1,
+  //       count: 2,
+  //       totalCount: 3,
+  //       multiplier: 4
+  //   })
+
+
+  //   console.log("here");    
+  //   return a;
+  //   //resolve(1);
+  //   //return Promise.resolve(a);
+  // }
+
 
   saveClientMessage(message: ClientMessage, tableId: string, guid: string): Promise<any> {
     let data = message;
@@ -749,6 +770,4 @@ export class DataRepository implements IDataRepository {
   saveUserEmail(saveUserEmail: SaveUserEmail): Promise<any> {
     return this.db.collection('SaveUserEmail').save(saveUserEmail);
   }
-
-
 }

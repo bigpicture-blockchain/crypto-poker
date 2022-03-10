@@ -234,7 +234,6 @@ class ProtobufConfig {
     message.add(new Field("rebuyRequest", 26, "RebuyRequest"));
     message.add(new Field("rewardsReportRequest",27 , "RewardsReportRequest"));
     
-    
     this.namespace.add(message);
   }
   
@@ -479,6 +478,18 @@ class ProtobufConfig {
     rewardsReport.add(new Field("handsPlayed", 12, "int32"));
     this.namespace.add(rewardsReport);
 
+    let missionReport = new Type("MissionReport");
+    missionReport.add(new Field("guid",1, "string"));
+    missionReport.add(new Field("misProgress",2, "MisPrg"));
+    missionReport.add(new Field("misPrBest",3, "MisPrg"));
+    missionReport.add(new Field("misCount",4, "MisPrg"));
+    this.namespace.add(missionReport);
+
+    let misPrg = new Type("MisPrg");
+    misPrg.add(new Field("a",1,"int32"));
+    misPrg.add(new Field("b",2,"int32"));
+    misPrg.add(new Field("c",3,"int32"));
+    this.namespace.add(misPrg);
 
 
     let exchangeRate = new Type("ExchangeRate");
@@ -498,6 +509,10 @@ class ProtobufConfig {
     // rewardsResult.add(new Field("profitLoss", 1, "double"));
     // rewardsResult.add(new Field("seeTurn", 2, "double"));
     this.namespace.add(rewardsReportResult);
+
+    let missionReportResult = new Type("MissionReportResult");
+    missionReportResult.add(new Field("mission", 1, "MissionReport", "repeated"));
+    this.namespace.add(missionReportResult);
 
     let pong = new Type("Pong");
     this.namespace.add(pong);
@@ -632,9 +647,10 @@ class ProtobufConfig {
     message.add(new Field("tournamentResult", 28, "TournamentResultView"));
     message.add(new Field("paymentHistoryResult", 29, "PaymentHistoryResult"));    
     message.add(new Field("tournamentInfoResult", 30, "TournamentInfoResult"));    
-    message.add(new Field("version", 31, "Version"));    
+    message.add(new Field("version", 31, "Version"));
     message.add(new Field("duplicateIpAddress", 32, "DuplicateIpAddress"));    
     message.add(new Field("rewardsReportResult", 33, "RewardsReportResult"));
+    message.add(new Field("missionReportResult", 34, "MissionReportResult"));
     this.namespace.add(message);
 
     

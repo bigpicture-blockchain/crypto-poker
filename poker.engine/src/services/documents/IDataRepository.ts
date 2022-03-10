@@ -4,6 +4,7 @@ import {User} from "../../model/User";
 import {ChatMessage, Account} from "../../../../poker.ui/src/shared/DataContainer";
 import { ExchangeRate } from "../../../../poker.ui/src/shared/ExchangeRate";
 import { RewardsReport } from "../../../../poker.ui/src/shared/RewardsReport";
+import { MissionReport } from "../../../../poker.ui/src/shared/MissionReport";
 import { Payment } from "../../model/Payment";
 import {TableBalance, UserTableAccount } from "../../model/TableBalance";
 import { ClientMessage } from '../../../../poker.ui/src/shared/ClientMessage';
@@ -35,6 +36,7 @@ export class IDataRepository {
   getExchangeRate(base: string): Promise<ExchangeRate> { throw new Error("Not implemented"); };
   getExchangeRates(): Promise<ExchangeRate[]> { throw new Error("Not implemented"); };
   getRewardsReport(): Promise<RewardsReport[]> { throw new Error("Not implemented"); };
+  // getMissionData(): Promise<MissionReport[]> { throw new Error("Not implemented"); };
   saveClientMessage(message: ClientMessage, tableId: string, guid: string): Promise<any> { throw new Error("Not implemented"); };  
   getPayments(args:{guid?:string, currency?:string, type?:string}): Promise<Payment[]> { throw new Error("Not implemented"); };
   getPaymentsSince(id:string): Promise<Payment[]> { throw new Error("Not implemented"); };

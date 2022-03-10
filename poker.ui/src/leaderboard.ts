@@ -3,7 +3,7 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 import { Util } from "./lib/util";
 import { ApiService } from "./lib/api-service";
 import { ClientMessage } from "./shared/ClientMessage";
-import { LeaderboardResult, LeaderboardUser, ExchangeRateResult, RewardsReportResult } from "./shared/DataContainer";
+import { LeaderboardResult, LeaderboardUser, ExchangeRateResult, RewardsReportResult, MissionReportResult } from "./shared/DataContainer";
 import * as $ from 'jquery';
 import { numberWithCommas } from "./shared/CommonHelpers";
 
@@ -13,14 +13,27 @@ export class Leaderboard {
   results: LeaderboardUser[] = [];
   rates: IExchangeRateView[] = [];
   rewards: IRewardsReportView[] = [];
+  mission: IMissionReportView[] = [];
   constructor(private ea: EventAggregator, private util: Util, private apiService: ApiService) {
-
     this.subscriptions.push(ea.subscribe(LeaderboardResult, (msg: LeaderboardResult) => { this.handleLeaderboardResult(msg) }));
     this.subscriptions.push(ea.subscribe(ExchangeRateResult, (msg: ExchangeRateResult) => { this.handleExchangeRateResult(msg) }));
     this.subscriptions.push(ea.subscribe(RewardsReportResult, (msg: RewardsReportResult) => { this.handleRewardsReportResult(msg) }));
+    this.subscriptions.push(ea.subscribe(MissionReportResult, (msg: MissionReportResult) => { this.handleMissionReportResult(msg) }));
+  }
+  handleMissionReportResult(data: MissionReportResult) {
+    this.mission = [];
+    for (let result of data.mission || []) {
+      let view: IMissionReportView = {
+        guid: result.guid,
+        misProgress: result.misProgress,
+        misPrBest: result.misPrBest,
+        misCount: result.misCount,
+      };
+      this.mission.push(view);
+    }
 
   }
-
+  
   handleRewardsReportResult(data: RewardsReportResult) {
     // this.rewards.length=0;
     this.rewards = [];
@@ -136,4 +149,23 @@ interface IRewardsReportView {
   missionProgress: number;
   percentile: number;
   handsPlayed: number;
+}
+
+interface IMissionReportView {
+  guid: string;
+  misProgress: {
+      a: number;
+      b: number;
+      c: number;
+  }
+  misPrBest: {
+      a: number;
+      b: number;
+      c: number;
+  }
+  misCount: {
+      a: number;
+      b: number;
+      c: number;
+  }
 }
