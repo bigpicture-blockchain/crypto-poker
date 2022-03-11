@@ -229,7 +229,8 @@ export class Table {
           guid: dcx.rewardsReportResult.rewards[counter].guid,
           misProgress: dcx.rewardsReportResult.rewards[counter].misProgress,
           misPrBest: dcx.rewardsReportResult.rewards[counter].misPrBest,
-          misCount: dcx.rewardsReportResult.rewards[counter].misCount
+          misCount: dcx.rewardsReportResult.rewards[counter].misCount,
+          multiplier: dcx.rewardsReportResult.rewards[counter].percentile
         })
       }
       dcy.missionReportResult.mission = a;
@@ -637,9 +638,7 @@ export class Table {
       // let dx = await this.dataRepository.getMissionData(subscriber.user.guid);
       for (let counter=0;counter<data.missionReportResult.mission.length; counter++) {
         if (data.missionReportResult.mission[counter].guid === subscriber.user.guid) {
-          
-          // todo: assign dataS the single element of the array
-          
+          // todo: assign dataS the single element of the array, now data for all players is sent to the table
           subscriber.send(data);
         }
       }

@@ -264,20 +264,22 @@ export class DataRepository implements IDataRepository {
 
       let missionProgress = 0;
 
+      // to be implemented: random daily mission (now it's fixed)
+
       missionProgress = tempReport.seeFlop / Missions.level1.seeFlop; misPrBest.a = 1; misCount.a = tempReport.seeFlop;
-      if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn; misCount.a = tempReport.seeTurn; }
-      if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver; misPrBest.a = 2; misPrBest.a = 1; misCount.a = tempReport.seeRiver; }
+      // if (tempReport.seeTurn / Missions.level1.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level1.seeTurn; misCount.a = tempReport.seeTurn; }
+      // if (tempReport.seeRiver / Missions.level1.seeRiver > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level1.seeRiver; misPrBest.a = 2; misPrBest.a = 1; misCount.a = tempReport.seeRiver; }
       misProgress.a = missionProgress;
 
       missionProgress = tempReport.winHand / Missions.level2.winHand; misPrBest.b = 1; misCount.b = tempReport.winHand;
-      if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair; misPrBest.b = 2; misCount.b = tempReport.handOnePair; }
-      if (tempReport.handTwoPairs / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs; misPrBest.b = 3; misCount.b = tempReport.handTwoPairs; }
+      // if (tempReport.handOnePair / Missions.level2.handOnePair > missionProgress) { missionProgress = tempReport.handOnePair / Missions.level2.handOnePair; misPrBest.b = 2; misCount.b = tempReport.handOnePair; }
+      // if (tempReport.handTwoPairs / Missions.level2.handTwoPairs > missionProgress) { missionProgress = tempReport.handTwoPairs / Missions.level2.handTwoPairs; misPrBest.b = 3; misCount.b = tempReport.handTwoPairs; }
       misProgress.b = missionProgress;
 
       missionProgress = tempReport.winHand / Missions.level3.winHand; misPrBest.c = 1; misCount.c = tempReport.winHand;
-      if (tempReport.seeFlop / Missions.level3.seeFlop > missionProgress) { missionProgress = tempReport.seeFlop / Missions.level3.seeFlop; misPrBest.c = 2; misCount.c = tempReport.seeFlop; }
-      if (tempReport.seeTurn / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn; misPrBest.c = 3; misCount.c = tempReport.seeTurn; }
-      if (tempReport.seeRiver / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver; misPrBest.c = 4; misCount.c = tempReport.seeRiver; }
+      // if (tempReport.seeFlop / Missions.level3.seeFlop > missionProgress) { missionProgress = tempReport.seeFlop / Missions.level3.seeFlop; misPrBest.c = 2; misCount.c = tempReport.seeFlop; }
+      // if (tempReport.seeTurn / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeTurn / Missions.level3.seeTurn; misPrBest.c = 3; misCount.c = tempReport.seeTurn; }
+      // if (tempReport.seeRiver / Missions.level3.seeTurn > missionProgress) { missionProgress = tempReport.seeRiver / Missions.level3.seeRiver; misPrBest.c = 4; misCount.c = tempReport.seeRiver; }
       misProgress.c = missionProgress;
       currentMission = 0;
       misProgress.a *= 100;
@@ -398,8 +400,8 @@ export class DataRepository implements IDataRepository {
   }
 
   getRewardsReport(): Promise<RewardsReport[]> {
-    // let x = this.db.collection('rewardsReportLeaderboard').find({}, { guid:1, profitLoss:1, date:1, seeFlop:1, seeTurn:1, seeRiver:1, winHand:1, handOnePair:1, handTwoPairs:1, position:1, percentile:1, currentMission:1, missionProgress:1, handsPlayed:1 }).sort({ profitLoss: -1 }).toArray(); 
-    let x = this.db.collection('rewardsReportLeaderboard').find({}, {}).sort({ profitLoss: -1 }).toArray();
+    let x = this.db.collection('rewardsReportLeaderboard').find({}, { guid:1, profitLoss:1, position:1, percentile:1, misProgress:1, misPrBest:1, misCount:1 }).sort({ profitLoss: -1 }).toArray(); 
+    //let x = this.db.collection('rewardsReportLeaderboard').find({}, {}).sort({ profitLoss: -1 }).toArray();
     return x;
   }
 

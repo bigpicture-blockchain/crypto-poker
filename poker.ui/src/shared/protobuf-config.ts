@@ -466,16 +466,10 @@ class ProtobufConfig {
     let rewardsReport = new Type("RewardsReport");
     rewardsReport.add(new Field("guid", 1, "string"));
     rewardsReport.add(new Field("profitLoss", 2, "int32"));
-    rewardsReport.add(new Field("handOnePair", 3, "int32"));
-    rewardsReport.add(new Field("handTwoPairs", 4, "int32"));
-    rewardsReport.add(new Field("seeFlop", 5, "int32"));
-    rewardsReport.add(new Field("seeTurn", 6, "int32"));
-    rewardsReport.add(new Field("seeRiver", 7, "int32"));
-    rewardsReport.add(new Field("winHand", 8, "int32"));
-    rewardsReport.add(new Field("currentMission", 9, "int32"));
-    rewardsReport.add(new Field("missionProgress", 10, "int32"));
-    rewardsReport.add(new Field("percentile", 11, "double"));
-    rewardsReport.add(new Field("handsPlayed", 12, "int32"));
+    rewardsReport.add(new Field("percentile", 3, "double"));
+    rewardsReport.add(new Field("misPrBest", 4, "MisPrg"));
+    rewardsReport.add(new Field("misCount", 5, "MisPrg"));
+    rewardsReport.add(new Field("misProgress", 6, "MisPrg"));
     this.namespace.add(rewardsReport);
 
     let missionReport = new Type("MissionReport");
@@ -483,6 +477,7 @@ class ProtobufConfig {
     missionReport.add(new Field("misProgress",2, "MisPrg"));
     missionReport.add(new Field("misPrBest",3, "MisPrg"));
     missionReport.add(new Field("misCount",4, "MisPrg"));
+    missionReport.add(new Field("multiplier",5, "double"));
     this.namespace.add(missionReport);
 
     let misPrg = new Type("MisPrg");

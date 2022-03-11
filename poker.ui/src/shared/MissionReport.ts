@@ -15,4 +15,5 @@ export class MissionReport {
         b: number;
         c: number;
     }
+    multiplier: number;
 }

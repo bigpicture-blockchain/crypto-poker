@@ -11,7 +11,6 @@ export class RewardsReportLeaderboard {
     position: number;
     percentile: number;
     currentMission: number;
-    missionProgress: number;
     handsPlayed: number;
     misProgress: {
         a: number;
