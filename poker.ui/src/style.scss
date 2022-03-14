@@ -799,6 +799,18 @@ position: absolute;
     height: 80px;
     width: 105px;
 }
+
+.player-sitting-inner1:before {
+  content: "";
+  position: relative;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  display: block;
+  background: url($cdn + "images/You.png") rgb(97, 111, 145) no-repeat;        
+  height: 80px;
+  width: 105px;
+}
 .player-sitting-inner-grayscale {
     
 }
