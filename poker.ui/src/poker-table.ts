@@ -310,7 +310,7 @@ export class PokerTable {
 
   onOpenTableAction(tableId: string) {
     if (this.util.currentTableId === tableId) {
-      this.showWarning('You are currently viewing this table!');
+      // this.showWarning('You are currently viewing this table!');
       
       return;
     }
