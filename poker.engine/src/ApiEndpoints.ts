@@ -19,10 +19,12 @@ import fs = require('fs');
 import { AdminSecureSocketService, IConnectionToPaymentServer } from './admin/AdminSecureSocketService';
 import { BlockCypherPaymentEvent } from "./admin/model/outgoing/BlockCypherPaymentEvent";
 import { GameServerProcessor } from "./admin/processor/GameServerProcessor";
-import { getUserData } from "./helpers";
+import { getUserData,getTableViewRow } from "./helpers";
 import {SaveUserEmail } from './model/SaveUserEmail'
 import { DbGameResults } from './model/table/DbGameResults';
 import { RewardsDetails } from './model/table/RewardsDetails';
+import { IPokerTableProvider } from "./services/IBroadcastService";
+import {Table} from './table'
 // import {  Db  } from 'mongodb';
 export class ApiEndpoints {
 
@@ -132,21 +134,24 @@ export class ApiEndpoints {
         });
 
         app.get('/api/tables', async (req:any, res:any) => {
-            let arr:TableConfig[] = [];
-            if(req.query.tournamentId){
-              let states = await this.dataRepository.getTableStates({ tournamentId:req.query.tournamentId });
-              let count = 0;
-              for(let state of states){
-                count++;
-                let config = new TableConfig();
-                config._id = state._id+'';
-                config.name = `Table ${count}`;
-                arr.push(config)
-              }
-            }else{
-              arr = await this.dataRepository.getTablesConfig();
-            }
-            res.send(arr);
+            // let arr:TableConfig[] = [];
+            // if(req.query.tournamentId){
+            //   let states = await this.dataRepository.getTableStates({ tournamentId:req.query.tournamentId });
+            //   let count = 0;
+            //   for(let state of states){
+            //     count++;
+            //     let config = new TableConfig();
+            //     config._id = state._id+'';
+            //     config.name = `Table ${count}`;
+            //     arr.push(config)
+            //   }
+            // }else{
+            //   arr = await this.dataRepository.getTablesConfig();
+            // }
+            let tableList  = await pokerProcessor.getTables().map(getTableViewRow);
+            console.log(tableList);
+            
+            res.send(tableList);
           });    
       
 
