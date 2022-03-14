@@ -118,7 +118,7 @@ export class ApiService {
       //let buffer = new Uint8Array(event.data);
       let message = protobufConfig.deserialize(event.data, 'DataContainer');
       if (message.pong == null)
-        console.log(`DataContainer =======> ${new Date().toLocaleString()} Received: (${event.data.byteLength} bytes)`, message);
+        // console.log(`DataContainer =======> ${new Date().toLocaleString()} Received: (${event.data.byteLength} bytes)`, message);
       this.ea.publish(new DataMessageEvent(message));
     } else {
       console.error(`event.data unexpected type!`, event.data);

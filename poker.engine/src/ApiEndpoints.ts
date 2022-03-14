@@ -149,7 +149,6 @@ export class ApiEndpoints {
             //   arr = await this.dataRepository.getTablesConfig();
             // }
             let tableList  = await pokerProcessor.getTables().map(getTableViewRow);
-            console.log(tableList);
             
             res.send(tableList);
           });    

@@ -312,7 +312,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
   }
 
   async handleMessageWithNoHandler(wsHandle: WebSocketHandle, data: ClientMessage): Promise<void> {
-    console.log(data);
+    // console.log(data);
     if (data.logoutRequest != null) {
       if (wsHandle.authenticated) {
         wsHandle.authenticated = false;

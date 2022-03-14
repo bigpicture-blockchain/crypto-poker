@@ -1208,7 +1208,7 @@ export class Table {
         lastStreet: gameResultPlayers[counter01].lastStreet ? gameResultPlayers[counter01].lastStreet : "preflop",
         winHand: winHand
       }
-      console.log(rewardsDetails);
+      // console.log(rewardsDetails);
       // let zzzxxx = Object.values(result.potResults[0].allocations[0].player.includes(gameResultPlayers[counter01].guid) > -1) ? true : false;
       await this.dataRepository.saveRewardsDetails(rewardsDetails);
       await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails, gameResultPlayers[counter01].guid);
