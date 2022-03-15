@@ -33,38 +33,49 @@ export class Leaderboard {
     }
 
   }
-  
+
   handleRewardsReportResult(data: RewardsReportResult) {
     // this.rewards.length=0;
     this.rewards = [];
+    console.log(JSON.stringify(data));
+let i=0
     for (let result of data.rewards || []) {
-      let view: IRewardsReportView = {
-        guid: "anon" + result.guid.substring(0,4),
+      i++
+      let dailyMission = 0
+      let fireWinning = 0
+      if (result.misProgress) {
+        if (result.misProgress.a === 100) {
+          dailyMission++
+          fireWinning += 10
+        }
+        if (result.misProgress.b === 100) {
+          dailyMission++
+          fireWinning += 50
+        }
+        if (result.misProgress.c === 100) {
+          dailyMission++
+          fireWinning += 100
+        }
+      }
+      let view = {
+        rank:i,
+        guid: "anon" + result.guid.substring(0, 4),
         profitLoss: result.profitLoss,
-        currentMission: result.currentMission,
-        seeFlop: result.seeFlop,
-        seeTurn: result.seeTurn,
-        seeRiver: result.seeRiver,
-        winHand: result.winHand,
-        handTwoPairs: result.handTwoPairs,
-        handOnePair: result.handOnePair,
-        missionProgress: result.missionProgress,
         percentile: result.percentile,
-        handsPlayed: result.handsPlayed
-     };
+        fireWinning: fireWinning,
+
+        dailyMission: dailyMission + "/3"
+      };
       this.rewards.push(view);
     }
 
-   // setTimeout(()=>{
-    //   for(let u of this.rates)
-    //     u.changed = false;
-    // },2000);
+   
 
   }
 
   handleExchangeRateResult(data: ExchangeRateResult) {
 
-    
+
     for (let result of data.rates || []) {
       let view: IExchangeRateView = {
         currency: result.base,
@@ -139,33 +150,29 @@ interface IExchangeRateView {
 interface IRewardsReportView {
   profitLoss: number;
   guid: string;
-  currentMission: number;
-  seeFlop: number;
-  seeTurn: number;
-  seeRiver: number;
-  winHand: number;
-  handTwoPairs: number;
-  handOnePair: number;
-  missionProgress: number;
+  fireWinning: number;
+  dailyMission: string;
+
+
   percentile: number;
-  handsPlayed: number;
+
 }
 
 interface IMissionReportView {
   guid: string;
   misProgress: {
-      a: number;
-      b: number;
-      c: number;
+    a: number;
+    b: number;
+    c: number;
   }
   misPrBest: {
-      a: number;
-      b: number;
-      c: number;
+    a: number;
+    b: number;
+    c: number;
   }
   misCount: {
-      a: number;
-      b: number;
-      c: number;
+    a: number;
+    b: number;
+    c: number;
   }
 }

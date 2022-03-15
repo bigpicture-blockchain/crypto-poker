@@ -134,23 +134,44 @@ export class ApiEndpoints {
         });
 
         app.get('/api/tables', async (req:any, res:any) => {
-            // let arr:TableConfig[] = [];
-            // if(req.query.tournamentId){
-            //   let states = await this.dataRepository.getTableStates({ tournamentId:req.query.tournamentId });
-            //   let count = 0;
-            //   for(let state of states){
-            //     count++;
-            //     let config = new TableConfig();
-            //     config._id = state._id+'';
-            //     config.name = `Table ${count}`;
-            //     arr.push(config)
-            //   }
-            // }else{
-            //   arr = await this.dataRepository.getTablesConfig();
-            // }
+             
             let tableList  = await pokerProcessor.getTables().map(getTableViewRow);
-            
-            res.send(tableList);
+            let data= await this.dataRepository.getRewardsReport()
+            let rewards = [];
+        let i=0
+            for (let result of data || []) {
+                i++
+              let dailyMission = 0
+              let fireWinning = 0
+              if (result.misProgress) {
+                if (result.misProgress.a === 100) {
+                  dailyMission++
+                  fireWinning += 10
+        
+                }
+                if (result.misProgress.b === 100) {
+                  dailyMission++
+                  fireWinning += 50
+                }
+                if (result.misProgress.c === 100) {
+                  dailyMission++
+                  fireWinning += 100
+                }
+              }
+              let view = {
+                rank:i,
+                guid: "anon" + result.guid.substring(0, 4),
+                profitLoss: result.profitLoss,
+                percentile: result.percentile,
+                fireWinning: fireWinning,
+        
+                dailyMission: dailyMission + "/3"
+              };
+              rewards.push(view);
+            }
+        
+
+            res.send({tableList,rewards});
           });    
       
 

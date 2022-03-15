@@ -1697,3 +1697,153 @@ ux-dialog {
   line-height: 28px;
   text-align: center;
 }
+
+.tables_content{
+  padding-top: 50px;
+}
+.tables{
+  height: 400px;
+}
+.table_title {
+  height: 55px;
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 30px;
+  width: 85%;
+  margin: auto;
+}
+.table_header {
+  height: 42px;
+  border-radius: 4px 4px 0 0;
+  background-color: #000000;
+  color: #FFFFFF;
+font-family: "Open Sans";
+font-size: 14px;
+font-weight: 600;
+letter-spacing: 0;
+line-height: 28px;
+}
+.table_header_div{
+  display: flex;
+  width: 96%;
+  margin: auto;
+  height: 100%;
+  align-items: center;
+} 
+.table_col{
+  width: 15%;
+  display: flex;
+  align-items: center;
+}
+.table_background{
+    width: 85%;
+    margin: auto;
+  opacity: 0.8;
+  border-radius: 4px;
+  background-color: rgba(0,0,0,0.73);
+}
+.table_body_div{
+  overflow-y: auto;
+  max-height: 230px;
+  margin: auto;
+  width: 98%;
+  margin-left: 2%;
+} 
+.table_body_content {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 28px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.border_line {
+  height: 1px !important;
+  border-bottom: 1px solid #FFFFFF !important;
+  opacity: 0.1 !important;
+}
+.table_footer_content {
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 19px;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  margin-left: 2%;
+}
+.join_table_button {
+  height: 25px;
+  width: 110px;
+  border-radius: 25px;
+  background: linear-gradient(
+180deg, #FAD55E 0%, #F7701F 100%);
+  color: #FFFFFF;
+  font-family: "Open Sans";
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 11px;
+  text-align: center;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+// /* width */
+// ::-webkit-scrollbar {
+//   width: 10px;
+// }
+
+// /* Track */
+// ::-webkit-scrollbar-track {
+//   border-radius: 5px;
+//   background-color: #434343;
+// }
+
+// /* Handle */
+// ::-webkit-scrollbar-thumb {
+//   background-color: #202020;
+//   border-radius: 5px;
+// }
+
+.no_scroll{
+    width:96% !important;
+}
+.pad_l5{
+    padding-left: 5px;
+}
+.fire_table{
+  height: 16px;
+  padding-left: 5px;
+}
+.game_container {
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.connect_wallet_button_table {
+  border-radius: 25px;
+  background: linear-gradient(180deg, #FAD55E 0%, #F7701F 100%);
+  width: 180px;
+  padding: 10px;
+  text-align: center;
+  margin: auto 20px auto 20px;
+  color: white;
+  font-family: "Open Sans";
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 19px;
+  cursor: pointer;
+}
