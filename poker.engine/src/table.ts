@@ -1038,7 +1038,7 @@ export class Table {
   }
 
   private playersSeenStreet() {
-    console.log(this.street);
+    // console.log(this.street);
     for (let counter = 0; counter < this.players.length; counter++) {
       if (!this.players[counter].hasFolded) {
         this.players[counter].lastStreet = this.street;

@@ -24,7 +24,7 @@ for(let envVar of [
     if(result.error){
       errMsg += ` dotEnv error: ${result.error.message}`
     }
-    console.log(errMsg)
+    // console.log(errMsg)
     process.exit(1);
   }
 }

@@ -64,7 +64,7 @@ export class WebSocketHandle implements ISubscriber {
     send(data: DataContainer|Buffer) {
       
       try {
-        console.log(data);
+        // console.log(data);
         // if (data.rewardsReportResult) {
         //   console.log("breakpoint");
         // }
