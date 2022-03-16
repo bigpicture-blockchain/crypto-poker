@@ -1703,6 +1703,22 @@ ux-dialog {
 }
 .tables{
   height: 400px;
+  /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: #434343;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #202020;
+  border-radius: 5px;
+}
 }
 .table_title {
   height: 55px;
@@ -1800,22 +1816,7 @@ line-height: 28px;
   cursor: pointer;
 }
 
-// /* width */
-// ::-webkit-scrollbar {
-//   width: 10px;
-// }
 
-// /* Track */
-// ::-webkit-scrollbar-track {
-//   border-radius: 5px;
-//   background-color: #434343;
-// }
-
-// /* Handle */
-// ::-webkit-scrollbar-thumb {
-//   background-color: #202020;
-//   border-radius: 5px;
-// }
 
 .no_scroll{
     width:96% !important;
