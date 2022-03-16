@@ -97,6 +97,7 @@ export class PokerTable {
   }
 
   handleMissionReportResult(data: MissionReportResult) {
+    // console.log("mission data   =========================  ", data);
     let allMissions = {
       a: [
         { value: 20, text: "See the flop" },
@@ -478,6 +479,7 @@ export class PokerTable {
     this.userData = userData;
     this.util.user = userData;
     this.setPlayerStack();      
+    // console.log("hello=====================",this.userData);        
   }
 
 

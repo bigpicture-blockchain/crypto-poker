@@ -1,3 +1,6 @@
+import { configV } from './configV';
+import { Server, Db, ReplaceOneOptions } from 'mongodb';
+import { TableBalance } from "./model/TableBalance";
 import { TableState, PlayerTableState } from './model/TableState';
 import { CommonHelpers, getCardSuit, numberWithCommas } from '../../poker.ui/src/shared/CommonHelpers';
 import { AutoOptionResult } from '../../poker.ui/src/shared/AutoOptionResult';
@@ -5,7 +8,7 @@ import {
   DataContainer, PokerError, GameStartingEvent, DealHoleCardsEvent, GameEvent, SubscribeTableResult, PotResult, TableSeatEvent,
   SetTableOptionResult, ChatMessage, ChatMessageResult, TableClosed, LeaderboardResult, LeaderboardUser, BlindsChangingEvent, TableSeatEvents, TableConfigs, RewardsReportResult, MissionReportResult
 } from "../../poker.ui/src/shared/DataContainer";
-import { WebSocketHandle } from "./model/WebSocketHandle";
+import { WebSocketHandle, IWebSocket } from "./model/WebSocketHandle";
 import { Deck } from "./deck";
 import { User } from "./model/User";
 import { TexasHoldemGameState, GamePot, PotResult as TexasHoldemGameState_PotResult, HandEvaluatorResult, GamePotResult } from "./model/TexasHoldemGameState";
@@ -40,16 +43,14 @@ import { DbHandEvaluatorResult } from './model/table/DbHandEvaluatorResult';
 import { JoinTableRequest } from './model/table/JoinTableRequest';
 import { UserSmall } from './model/UserSmall';
 import { DataRepository } from './services/documents/DataRepository';
+import { config } from 'bluebird';
 
 export class Table {
 
   static readonly MaxSeatNumber: number = 9; //not related to maxPlayers - indicates the seat numbers that can be sat in (regardless of the maximum number of players)
-
-
   constructor(tableConfig: TableConfig) {
     this._tableConfig = tableConfig;
     this.currencyUnit = CurrencyUnit.getCurrencyUnit(this.tableConfig.currency);
-
   }
 
   broadcastService: IBroadcastService;
@@ -94,6 +95,12 @@ export class Table {
   processor: TableProcessor;
   get tableId() {
     return this.tableConfig._id.toString();
+  }
+
+  static async brutalStopServer(dataRepository: any) {
+    console.log("Stopping Server");
+    let accounts = await dataRepository.resetBalances(500000);
+    process.exit(1);
   }
 
   validateJoinTable(request: JoinTableRequest): JoinTableResult {
@@ -284,6 +291,7 @@ export class Table {
     gameStarting.isStarting = true;
     gameStarting.startsInNumSeconds = Math.max(0, Math.round((this.gameStarting.getTime() - new Date().getTime()) / 1000));
     return gameStarting;
+
   }
 
   updateExchangeRate(rate: number) {
@@ -636,7 +644,7 @@ export class Table {
   sendDataContainerMission(data: DataContainer): void {
     for (let subscriber of this.subscribers) {
       // let dx = await this.dataRepository.getMissionData(subscriber.user.guid);
-      for (let counter=0;counter<data.missionReportResult.mission.length; counter++) {
+      for (let counter = 0; counter < data.missionReportResult.mission.length; counter++) {
         if (data.missionReportResult.mission[counter].guid === subscriber.user.guid) {
           // todo: assign dataS the single element of the array, now data for all players is sent to the table
           subscriber.send(data);
@@ -716,20 +724,15 @@ export class Table {
         data.chatMessageResult.messages = _.takeRight(this.chatMessages, 50);
         data.chatMessageResult.tableId = this.tableId;
       }
-
       if (this.gameStarting != null) {
         data.gameStarting = this.getGameStartingEvent();
         data.gameStarting.nextBlind = data.subscribeTableResult.nextBlind;
-
       }
-
       subscriber.send(data);
-
       if (broadcastToOthers) {
         this.broadcastPlayer(player, true);
       }
     }
-
   }
 
   getNextBlind(blindConfigResult: BlindConfigResult): NextBlind {
@@ -1366,7 +1369,20 @@ export class Table {
     } else {
       if (!handled) {
         if (this.getPlayersForNextHand().length >= this.minNumPlayers) {
-          this.handleGameStartingEvent();
+          var today = new Date();
+          var startReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.resetHoursFrom, configV.ResetMinutesFrom);
+          var stopReset = new Date(today.getFullYear(), today.getMonth(), today.getDate(), configV.ResetHoursTo, configV.ResetMinutesTo);
+          let reset = (startReset < today && stopReset > today)
+          if (reset) {
+            console.log("Day Reset");
+            if (!configV.resetInProgress) {
+              configV.resetInProgress = true;
+              console.log("TIMEOUT RESET SET ON table.ts")
+              setTimeout(Table.brutalStopServer,configV.resetDelay,this.dataRepository);
+            }
+          } else {
+            await this.handleGameStartingEvent();
+          }
         }
       }
     }
@@ -1675,7 +1691,6 @@ export class Table {
     if (this.tableConfig._id) {
       state._id = this.tableId;
     }
-
     state.tournamentId = this.tournamentId;
     state.dealerSeat = this.dealerSeat;
     state.players = this.players.map(p => new PlayerTableState(p));

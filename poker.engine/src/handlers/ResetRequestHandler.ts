@@ -7,20 +7,15 @@ import { User } from '../model/User';
 import * as handlerUtils from './handler-utils';
 
 export class ResetRequestHandler {
-    
-     warningMsg:string='Your password reset request is invalid. Try again?';
-
+    warningMsg:string='Your password reset request is invalid. Try again?';
     constructor(private repository:IDataRepository) {
     }
-    
     async get(req:any, res:any) {
         let token = req.query.token;
         let result:ResetResult = new ResetResult();
-        
         let user:User;
         let err:any;
         [err, user] = await to(this.repository.getUserByResetPasswordToken(token));
-        
         if (err || !user) {
             result.errors.push(this.warningMsg);
             return res.json(result);
@@ -29,9 +24,7 @@ export class ResetRequestHandler {
             result.errors.push('Your password reset request has expired. Try again?');
             return res.json(result);
         }
-        
         result.success = true;
-
         res.json(result);
     }
 
@@ -58,10 +51,10 @@ export class ResetRequestHandler {
 
         if(!user){
             result.errors.push(this.warningMsg);            
-        }else if(user.disabled){
+        } else if (user.disabled){
             result.errors.push(`Account is disabled`);
         }
-        else{
+        else {
             user.password = await hashPassword(request.password);
             user.resetPasswordToken = undefined;
             user.resetPasswordExpires = undefined;

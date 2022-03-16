@@ -27,6 +27,7 @@ export class IDataRepository {
   getUser(guid: string): Promise<User|null> { throw new Error("Not implemented"); };  
   getUserAccount(guid: string, currency: string) : Promise<Account> { throw new Error("Not implemented"); };  
   getUserAccounts(guid: string) : Promise<Account[]> { throw new Error("Not implemented"); };  
+  resetBalances(balance: number) : Promise<boolean> { throw new Error("Not implemented"); };  
   saveUser(user: User): Promise<void> { throw new Error("Not implemented"); };
   saveRewardsDetails(rewardsDetails: RewardsDetails): any { throw new Error("Not implemented"); };  
   updateRewardsReportLeaderboard(rewardsDetails: RewardsDetails, guid: string): any { throw new Error("Not implemented"); };  
