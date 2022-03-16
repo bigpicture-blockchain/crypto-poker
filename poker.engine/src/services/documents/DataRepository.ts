@@ -468,6 +468,12 @@ export class DataRepository implements IDataRepository {
     
     await this.db.collection('historicalLeaderboard').insertMany(y);
 
+    try {
+      x = await this.db.collection("rewardsReportLeaderboard").drop();
+    } catch (e) {
+      console.log("Error dropping table rewardsReportLeaderboard");
+    }
+    
     return this.db.collection('userAccounts').updateMany(
       {}, {$set: { balance: balance }});
   }

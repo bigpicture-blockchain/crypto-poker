@@ -124,13 +124,13 @@ export class Bootstrapper {
                 setTimeout(Table.brutalStopServer, configV.resetDelay, this.dataRepository);
             }
         }
-        if (!environment.debug) {
-            try {
-                this.pokerProcessor.pingClients();
-            } catch (e) {
-                logger.error(e);
-            }
-        }
+        // if (!environment.debug) {
+        //     try {
+        //         this.pokerProcessor.pingClients();
+        //     } catch (e) {
+        //         logger.error(e);
+        //     }
+        // }
         
         try {
             this.pokerProcessor.checkIdlePlayers();
