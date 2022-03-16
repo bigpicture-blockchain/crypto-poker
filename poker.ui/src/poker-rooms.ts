@@ -36,7 +36,7 @@ export class PokerRooms {
       if(tableIdFromURL){
         this.openTable(tableIdFromURL)
       }
-    }, 1000);
+    }, 4000);
   }
 
   
