@@ -21,7 +21,8 @@ apt upgrade -y
 apt-get install software-properties-common curl -y
 
 #letsencrypt
-add-apt-repository ppa:certbot/certbot -y
+#add-apt-repository ppa:certbot/certbot -yes
+apt install certbot
 
 #nodejs
 curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
@@ -29,7 +30,7 @@ curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 #apt-get update not required as nodejs setup script above calls it
 service apache2 stop
 apt-get remove apache2 -y
-apt-get install ufw unzip zip ntp git fail2ban build-essential nginx python-certbot-nginx nodejs -y
+apt-get install ufw unzip zip ntp git fail2ban build-essential nginx python3-certbot-nginx nodejs -y
 
 #configure firewall
 ufw allow 22
@@ -41,31 +42,32 @@ ufw status verbose
 npm install forever -g
 
 #mongodb
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb.list
-apt update
-apt install libcurl3 openssl mongodb-org -y
+wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-5.0.list
+apt-get update
+apt-get install -y mongodb-org
+systemctl start mongod
+systemctl enable mongod
 
-service mongod start
-systemctl enable mongod.service
-
-sudo -u $USER cp /tmp/install_files/*.sh /home/$USER
+#sudo -u $USER cp /tmp/install_files/*.sh /home/$USER
+cp ./vagrant/game_server/install_files/* /home/$USER
+cp ./vagrant/game_server/install_files/.htpasswd /home/$USER/.htpasswd
 chmod +x /home/$USER/*.sh
 
 #setup websites
-cp /tmp/install_files/poker_site_nginx /etc/nginx/sites-available/
-cp /tmp/install_files/admin_site_nginx /etc/nginx/sites-available/
+cp /home/$USER/poker_site_nginx /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/poker_site_nginx /etc/nginx/sites-enabled/
-ln -s /etc/nginx/sites-available/admin_site_nginx /etc/nginx/sites-enabled/
 
 nginx -t
 
-cp /tmp/install_files/.htpasswd /etc/nginx/
+#cp /tmp/install_files/.htpasswd /etc/nginx/
+cp /home/$USER/.htpasswd /etc/nginx/
 
 mkdir -p /opt/poker/poker.engine
-tar -xvf /tmp/install_files/GeoLite2-Country.tar.gz -C /opt/poker/poker.engine --wildcards "*.mmdb" --strip-components 1
+#tar -xvf /tmp/install_files/GeoLite2-Country.tar.gz -C /opt/poker/poker.engine --wildcards "*.mmdb" --strip-components 1
 
-cp /tmp/install_files/game_server.env /home/$USER/poker/poker.engine/.env
+#cp /home/$USER/game_server.env /opt/poker.engine/.env
+cp /home/$USER/game_server.env /opt/poker/poker.engine/.env
 
 mkdir -p /var/www/poker.site
 mkdir -p /var/www/admin.poker.site
@@ -90,4 +92,4 @@ sudo apt-get install -y powershell
 #cp /tmp/install_files/poker.service /etc/systemd/system/
 #systemctl enable poker.service
 
-sudo pwsh x.ps1
+#sudo pwsh x.ps1

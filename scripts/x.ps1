@@ -7,16 +7,14 @@ $version = Get-Content .version
 #(Get-Content ./poker.ui/src/cards.scss).replace("`$cdn: '';", "`$cdn: '${cdn}/';") | Set-Content ./poker.ui/src/cards.scss
 #(Get-Content ./poker.ui/src/flags16.scss).replace("`$cdn: '';", "`$cdn: '${cdn}/';") | Set-Content ./poker.ui/src/flags16.scss
 
-Write-Host "here"
-
-
 cd ../poker.ui/
 #dir scripts/*.js -Recurse -Force | Remove-Item
 Remove-Item ./scripts -Recurse -Force
+
+sudo apt install python2
+
 npm install
 au build --env prod
-
-Write-Host "There"
 
 Write-Host "Renaming bundled files..."
 mv ./scripts/app-bundle.js ./scripts/app-bundle-$version.js
