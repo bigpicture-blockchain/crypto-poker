@@ -1,6 +1,8 @@
 export default {
   debug: true,
   testing: true,
-  pokerUiWSUrl: 'solanapoker.badbeat.com',
+  //pokerUiWSUrl: 'solanapoker.badbeat.com',
+  pokerUiWSUrl: 'cryptopoker.fun',
+  //pokerUiWSUrlPort: '80'
   pokerUiWSUrlPort: '80'
 };

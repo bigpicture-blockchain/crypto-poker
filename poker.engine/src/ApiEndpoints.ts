@@ -88,14 +88,14 @@ export class ApiEndpoints {
                 guid = customData.guid;
             }
 
-            else if (newGuid!==extGuid || !extGuid || loginFailed) {
-               if(newGuid!=="null"){
+            // else if (newGuid!==extGuid || !extGuid || loginFailed) {
+               if(newGuid && newGuid!="null"){
                      guid=newGuid
                }else{
                 guid = crypto.randomBytes(20).toString('hex');
                }
-                request.headers.cookie = `guid=${guid};isNewUser=1`;
-            }
+               request.headers.cookie = `guid=${guid};isNewUser=1`;
+            // }
             if (guid) {
                 headers.push(`Set-Cookie: guid=${guid}; Expires=Wed, 12 Sep 2037 07:28:00 GMT`);
             }
