@@ -24,7 +24,7 @@ apt-get install software-properties-common curl -y
 add-apt-repository ppa:certbot/certbot -y
 
 #nodejs
-curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 
 #apt-get update not required as nodejs setup script above calls it
 service apache2 stop
@@ -73,6 +73,19 @@ chown -R www-data:www-data /var/www/poker.site
 chown -R www-data:www-data /var/www/admin.poker.site
 chmod 775 /var/www/poker.site
 chmod 775 /var/www/admin.poker.site
+
+# Update the list of packages
+sudo apt-get update
+# Install pre-requisite packages.
+sudo apt-get install -y wget apt-transport-https software-properties-common
+# Download the Microsoft repository GPG keys
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+# Register the Microsoft repository GPG keys
+sudo dpkg -i packages-microsoft-prod.deb
+# Update the list of packages after we added packages.microsoft.com
+sudo apt-get update
+# Install PowerShell
+sudo apt-get install -y powershell
 
 #cp /tmp/install_files/poker.service /etc/systemd/system/
 #systemctl enable poker.service
