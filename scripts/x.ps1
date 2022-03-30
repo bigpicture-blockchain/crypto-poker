@@ -10,7 +10,7 @@ $version = Get-Content .version
 Write-Host "here"
 
 
-cd poker.ui/
+cd ../poker.ui/
 #dir scripts/*.js -Recurse -Force | Remove-Item
 Remove-Item ./scripts -Recurse -Force
 npm install
