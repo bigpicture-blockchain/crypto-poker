@@ -25,7 +25,7 @@ apt-get install software-properties-common curl -y
 apt install certbot
 
 #nodejs
-curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
 #apt-get update not required as nodejs setup script above calls it
 service apache2 stop
@@ -75,6 +75,9 @@ chown -R www-data:www-data /var/www/poker.site
 chown -R www-data:www-data /var/www/admin.poker.site
 chmod 775 /var/www/poker.site
 chmod 775 /var/www/admin.poker.site
+
+mkdir -p /home/$USER/poker
+
 
 # Update the list of packages
 sudo apt-get update
