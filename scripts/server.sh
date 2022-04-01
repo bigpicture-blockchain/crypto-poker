@@ -15,14 +15,14 @@ sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_
 sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config; 
 systemctl restart sshd;
 
-#things missing from base install
+#things missing from base instal
 apt update
 apt upgrade -y
 apt-get install software-properties-common curl -y
 
 #letsencrypt
 #add-apt-repository ppa:certbot/certbot -yes
-apt install certbot
+apt install certbot -y
 
 #nodejs
 curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
