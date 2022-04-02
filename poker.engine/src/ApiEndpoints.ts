@@ -139,6 +139,7 @@ export class ApiEndpoints {
             let data= await this.dataRepository.getRewardsReport()
             let rewards = [];
         let i=0
+        console.log("updating leaderboard data");
             for (let result of data || []) {
                 i++
               let dailyMission = 0

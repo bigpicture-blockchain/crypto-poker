@@ -125,11 +125,11 @@ export class Bootstrapper {
             }
         }
         // if (!environment.debug) {
-        //     try {
-        //         this.pokerProcessor.pingClients();
-        //     } catch (e) {
-        //         logger.error(e);
-        //     }
+            try {
+                this.pokerProcessor.pingClients();
+            } catch (e) {
+                logger.error(e);
+            }
         // }
         
         try {

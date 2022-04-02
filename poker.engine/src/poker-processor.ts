@@ -7,7 +7,7 @@ import { WebSocketHandle, IWebSocket } from "./model/WebSocketHandle";
 import { IDataRepository } from "./services/documents/IDataRepository";
 import { User } from "./model/User";
 import {
-  DataContainer, AccountFunded, AccountWithdrawlResult, ChatMessage, UserData, Account,
+  Pong, DataContainer, AccountFunded, AccountWithdrawlResult, ChatMessage, UserData, Account,
   CashOutRequestResult, TxFee, PokerError, GetAccountSettingsResult, SetAccountSettingsResult, GlobalChatResult,
   ChatMessageResult, GlobalUsers, UserStatus, LeaderboardResult, LeaderboardUser, TransferFundsResult, ExchangeRateResult, RewardsReportResult, MissionReportResult, CashOutAccount, Version, DuplicateIpAddress
 } from "../../poker.ui/src/shared/DataContainer";
@@ -153,7 +153,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     let user = customData.user;
 
     let guidCookie = this.getCookie(request.headers, "guid");
-
+    console.log(guidCookie);
     let data = new DataContainer();
     let wsHandle = new WebSocketHandle(ws);
     wsHandle.onerror = () => { this.handleClose(wsHandle); };
@@ -284,7 +284,6 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
       && message.tournamentSubscriptionRequest == null
     */
     if (message.ping == null) {
-
       let tableId = this.getTableId(message);
       return this.dataRepository.saveClientMessage(message, tableId, wsHandle.user.guid);
     }
@@ -312,7 +311,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
   }
 
   async handleMessageWithNoHandler(wsHandle: WebSocketHandle, data: ClientMessage): Promise<void> {
-    // console.log(data);
+    console.log("this is data ====> ", data);
     if (data.logoutRequest != null) {
       if (wsHandle.authenticated) {
         wsHandle.authenticated = false;
@@ -322,11 +321,12 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
         wsHandle.send(dc);
       }
     }
-    else if (data.ping != null) {
-      let data = new DataContainer();
+    else if (data.ping != undefined && data.ping != null) {
+      let datasend = new DataContainer();
+      console.log("=============>I received a ping from client", data, wsHandle.user);
       wsHandle.lastPing = new Date();
-      data.pong = {};
-      wsHandle.send(data);
+      datasend.pong = new Pong();
+      wsHandle.send(datasend);
     }
     else if (data.fold != null) {
       let table = this.findTable(data.fold.tableId);
@@ -559,14 +559,35 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     return table;
   }
 
-  pingClients() {
+  async pingClients() {
+    console.log("=================> RETRIEVING PINGTIME");
     for (let client of this.clients) {
+      console.log(client);
       let pingTime = new Date().getTime() - client.lastPing.getTime();
-      if (pingTime > 40000) {
+      console.log("ping time is " , pingTime);
+      if (pingTime > 100000) {
         if (client.user) {
           logger.info(`disconnecting ${client.user.screenName} due to ping ${pingTime}`);
         }
         client.terminate();
+        console.log("==============================>terminating" , client);
+        for (let counter = 0; counter < this.tables.length; counter++) {
+          
+          
+          
+          // if (this.tables[counter].players && this.tables[counter].players.indexOf(client.user.guid) > -1) {
+          //   let errorMessage = `You are still playing at table '${table.tableConfig.name}'!`;
+          //   wsHandle.sendError(errorMessage);
+          // } else {
+          //   await table.sendLeaveTable(wsHandle.user.toSmall());
+          // }
+
+          
+          
+          await this.tables[counter].leaveTable(client.user.guid);
+          // await this.tables[counter].sendLeaveTable(client.user.toSmall());
+        }
+        // table.sendLeaveTable(client.user.toSmall());
       }
     }
   }

@@ -1378,7 +1378,7 @@ export class Table {
             if (!configV.resetInProgress) {
               configV.resetInProgress = true;
               console.log("TIMEOUT RESET SET ON table.ts")
-              setTimeout(Table.brutalStopServer,configV.resetDelay,this.dataRepository);
+              setTimeout(Table.brutalStopServer, configV.resetDelay, this.dataRepository);
             }
           } else {
             await this.handleGameStartingEvent();

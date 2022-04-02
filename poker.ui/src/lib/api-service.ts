@@ -117,7 +117,7 @@ export class ApiService {
     if (event.data.constructor.name === 'ArrayBuffer') {
       //let buffer = new Uint8Array(event.data);
       let message = protobufConfig.deserialize(event.data, 'DataContainer');
-      if (message.pong == null)
+      // if (message.pong == null)
         // console.log(`DataContainer =======> ${new Date().toLocaleString()} Received: (${event.data.byteLength} bytes)`, message);
       this.ea.publish(new DataMessageEvent(message));
     } else {

@@ -239,20 +239,24 @@ export class PokerTable {
 
 
   sendPing(){
+    console.log("Sending ping (in function)");
     if(!this.wsAlive){
       window.clearInterval(this.pingTimer);
       console.log('no response to ping');
       // this.apiService.close();
       // this.apiService.openWebSocket(() => { this.onopen() });
     }else{
+      console.log("response to ping received");
       this.wsAlive=false;      
       this.pingStartDate = new Date();
       this.apiService.send(new Ping());
+      console.log("loading new pinger");
       this.pingTimer = window.setTimeout(() => { this.sendPing()}, 20000);    
     }
   }
 
   handleServerPong() {
+    console.log("=================================>receiving pong");
     this.wsAlive=true;
     this.pingTime = new Date().getTime() - this.pingStartDate.getTime();    
   }
@@ -375,7 +379,7 @@ export class PokerTable {
       let data = message[handler.key];
       if (data) {
         handled = true;
-        // console.log('handling ' + handler.key, data);
+        console.log('=================================>handling ' + handler.key, data);
         handler.handler.call(this, data);
 
       }
@@ -404,6 +408,7 @@ export class PokerTable {
   }
 
   handleVersion(result:Version){
+    console.log("=========================>handlingversion");
     let priorVersion = localStorage.getItem("app_version");
     localStorage.setItem("app_version", result.version);
     if(priorVersion && priorVersion != result.version){        
@@ -420,9 +425,10 @@ export class PokerTable {
       message.tournamentSubscriptionRequest = new TournamentSubscriptionRequest();
       message.globalChatRequest = new GlobalChatRequest(undefined, true);
       this.apiService.sendMessage(message);      
-      if(!environment.debug) {
+      // if(!environment.debug) {
         this.sendPing();   
-      }
+        console.log("sending ping!");
+      // }
       this.checkRegisterTournament();
     }
   }

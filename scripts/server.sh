@@ -57,6 +57,7 @@ chmod +x /home/$USER/*.sh
 #setup websites
 cp /home/$USER/poker_site_nginx /etc/nginx/sites-available/
 ln -s /etc/nginx/sites-available/poker_site_nginx /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default 
 
 nginx -t
 

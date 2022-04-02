@@ -67,3 +67,5 @@ poker.ui/src/**/*.js
 poker.engine/.vscode/settings.json
 poker.engine/test/test-rewards.ts
 poker.engine/datajump2.json
+poker.ui/test/unit/setup.js
+poker.ui/test/unit/app.spec.js
