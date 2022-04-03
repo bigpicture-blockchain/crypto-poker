@@ -232,7 +232,9 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
       data.globalUsers = this.getGlobalUsers();
       wsHandle.send(data);
       this.broadcastUserStatus(wsHandle, true);
-      if (!environment.debug && sameIpAddressClient != null) {
+  
+      // duplicate IP check disabled (&& false)
+      if (!environment.debug && sameIpAddressClient != null && false) {
         let data = new DataContainer();
         data.duplicateIpAddress = new DuplicateIpAddress();
         sameIpAddressClient.send(data);
@@ -240,6 +242,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
           this.handleClose(sameIpAddressClient);
         }, 5000)
       }
+
     }
 
     return wsHandle.user ? wsHandle : null;

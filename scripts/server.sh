@@ -96,4 +96,4 @@ sudo apt-get install -y powershell
 #cp /tmp/install_files/poker.service /etc/systemd/system/
 #systemctl enable poker.service
 
-#sudo pwsh x.ps1
+sudo pwsh x.ps1
