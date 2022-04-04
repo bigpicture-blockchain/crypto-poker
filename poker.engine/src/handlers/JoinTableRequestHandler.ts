@@ -78,37 +78,5 @@ export class JoinTableRequestHandler extends AbstractMessageHandler<ClientJoinTa
     let tMessage = new TableProcessorMessage(table);
     tMessage.joinTableRequest = request;
     table.sendTableProcessorMessage(tMessage);
- 
-    let dcx = new DataContainer();
-
-    dcx.rewardsReportResult = new RewardsReportResult();
-    dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
-    try {
-      let dcy = new DataContainer();
-      dcy.missionReportResult = new MissionReportResult();
-      // dcy.missionReportResult = await this.dataRepository.getMissionData();
-      //await this.dataRepository.getMissionData();
-      let a = [];
-      for (let counter = 0; counter < dcx.rewardsReportResult.rewards.length; counter++) {
-        a.push({
-          guid: dcx.rewardsReportResult.rewards[counter].guid,
-          misProgress: dcx.rewardsReportResult.rewards[counter].misProgress,
-          misPrBest: dcx.rewardsReportResult.rewards[counter].misPrBest,
-          misCount: dcx.rewardsReportResult.rewards[counter].misCount,
-          multiplier: dcx.rewardsReportResult.rewards[counter].percentile
-        })
-      }
-      dcy.missionReportResult.mission = a;
-
-      table.sendDataContainer(dcx);
-      table.sendDataContainerMission(dcy);
-    }
-    catch (e) {
-      console.log(e);
-
-    }
-
-   
-
   }
 }

@@ -660,7 +660,7 @@ export class Table {
     return this.players.find(p => p.seat == seat);
   }
 
-  addSubscriber(subscriber: ISubscriber) {
+  async addSubscriber(subscriber: ISubscriber) {
     let existingSubscriber = this.subscribers.find(s => s === subscriber);
     if (existingSubscriber == null) {
       this.subscribers.push(subscriber);
@@ -731,6 +731,39 @@ export class Table {
         this.broadcastPlayer(player, true);
       }
     }
+    let dcx = new DataContainer();
+
+    dcx.rewardsReportResult = new RewardsReportResult();
+    dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+    try {
+      let dcy = new DataContainer();
+      dcy.missionReportResult = new MissionReportResult();
+      // dcy.missionReportResult = await this.dataRepository.getMissionData();
+      //await this.dataRepository.getMissionData();
+      let a = [];
+      for (let counter = 0; counter < dcx.rewardsReportResult.rewards.length; counter++) {
+        for (let counter2 = 0; counter2 < this.subscribers.length; counter2++) {
+          if (dcx.rewardsReportResult.rewards[counter].guid == this.subscribers[counter2].user.guid) {
+            a.push({
+              guid: dcx.rewardsReportResult.rewards[counter].guid,
+              misProgress: dcx.rewardsReportResult.rewards[counter].misProgress,
+              misPrBest: dcx.rewardsReportResult.rewards[counter].misPrBest,
+              misCount: dcx.rewardsReportResult.rewards[counter].misCount,
+              multiplier: dcx.rewardsReportResult.rewards[counter].percentile
+            })
+          }
+        }
+      }
+      dcy.missionReportResult.mission = a;
+
+      this.sendDataContainer(dcx);
+      this.sendDataContainerMission(dcy);
+    }
+    catch (e) {
+      console.log(e);
+
+    }
+
   }
 
   getNextBlind(blindConfigResult: BlindConfigResult): NextBlind {
