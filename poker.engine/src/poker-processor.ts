@@ -153,7 +153,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     let user = customData.user;
 
     let guidCookie = this.getCookie(request.headers, "guid");
-    console.log(guidCookie);
+    // console.log(guidCookie);
     let data = new DataContainer();
     let wsHandle = new WebSocketHandle(ws);
     wsHandle.onerror = () => { this.handleClose(wsHandle); };
@@ -262,6 +262,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     this.broadcastUserStatus(wsHandle, online);
 
     for (let table of this.tables) {
+      // console.log("===============================> handling disconnection");
       table.onClientDisconnected(wsHandle);
     }
     this.tournamentLogic.removeSubscriber(wsHandle);
@@ -314,7 +315,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
   }
 
   async handleMessageWithNoHandler(wsHandle: WebSocketHandle, data: ClientMessage): Promise<void> {
-    console.log("this is data ====> ", data);
+    // console.log("this is data ====> ", data);
     if (data.logoutRequest != null) {
       if (wsHandle.authenticated) {
         wsHandle.authenticated = false;
@@ -326,7 +327,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
     }
     else if (data.ping != undefined && data.ping != null) {
       let datasend = new DataContainer();
-      console.log("=============>I received a ping from client", data, wsHandle.user);
+      // console.log("=============>I received a ping from client", data, wsHandle.user);
       wsHandle.lastPing = new Date();
       datasend.pong = new Pong();
       wsHandle.send(datasend);
@@ -565,7 +566,7 @@ export class PokerProcessor implements IBroadcastService, IPokerTableProvider {
   async pingClients() {
     console.log("=================> RETRIEVING PINGTIME");
     for (let client of this.clients) {
-      console.log(client);
+      // console.log(client);
       let pingTime = new Date().getTime() - client.lastPing.getTime();
       console.log("ping time is " , pingTime);
       if (pingTime > 100000) {

@@ -1,6 +1,3 @@
-// import { GameResultPlayer } from "./GameResultPlayer";
-// import { DbPotResult } from "./DbPotResult";
-// import { TableAuditEvent } from "./TableAuditEvent";
 export class RewardsDetails {
     date: Date;
     guid: string;

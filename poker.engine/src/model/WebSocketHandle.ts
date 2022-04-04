@@ -62,7 +62,6 @@ export class WebSocketHandle implements ISubscriber {
     }
 
     send(data: DataContainer|Buffer) {
-      
       try {
         // console.log(data);
         // if (data.rewardsReportResult) {
@@ -73,13 +72,12 @@ export class WebSocketHandle implements ISubscriber {
           let date_ob = new Date(nowts);
           let datestring = date_ob.getHours().toString() + ":" + date_ob.getMinutes().toString() + ":" + date_ob.getSeconds().toString();
           fs.appendFileSync('./datajump.json', "WebSocketHands (sending back): ===>" + datestring + '\r\n' + JSON.stringify(data, null, 2) + '\r\n========================END======================\r\n' , 'utf-8');
-          console.log("============================>sending data", data)
+          // console.log("============================>sending data", data)
           data = protobufConfig.serialize(data, 'DataContainer');                    
-          console.log (data);
+          // console.log (data);
         }
         try {
           this.socket.send(data);
-          
         }catch(e) {
           logger.info(`error sending to user:${this.user.screenName}:${this.id} ${inspect(e)}`);
           this.onerror();    
@@ -87,8 +85,6 @@ export class WebSocketHandle implements ISubscriber {
       } catch (e) {
         logger.error(`error serialize :${this.user.screenName}:${this.id} data:${inspect(data)}` +  e);//this will be a serialize error
       }
-      
-      
     }
 
   sendError(msg: string) {

@@ -243,8 +243,8 @@ export class PokerTable {
     if(!this.wsAlive){
       window.clearInterval(this.pingTimer);
       console.log('no response to ping');
-      // this.apiService.close();
-      // this.apiService.openWebSocket(() => { this.onopen() });
+      this.apiService.close();
+      this.apiService.openWebSocket(() => { this.onopen() });
     }else{
       console.log("response to ping received");
       this.wsAlive=false;      

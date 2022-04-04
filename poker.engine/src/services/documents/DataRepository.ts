@@ -253,6 +253,7 @@ export class DataRepository implements IDataRepository {
     let addSeeRiver = rewardsDetails.lastStreet == "river" ? 1 : 0;
     let addWinHand = rewardsDetails.winHand ? 1 : 0;
     let update, lastProfitLoss, lastHandOnePair, lastHandTwoPairs, lastSeeFlop, lastSeeTurn, lastSeeRiver, lastWinHand, currentMission, lastHandsPlayed;
+    // Report exists: update
     if (tempReport != null) {
       lastProfitLoss = await this.notNaN(tempReport.profitLoss);
       lastHandOnePair = await this.notNaN(tempReport.handOnePair);
@@ -322,9 +323,7 @@ export class DataRepository implements IDataRepository {
           misProgress: misProgress, misCount: misCount, misPrBest: misPrBest }
       }
       await collectionU.updateOne(query, update);
-
-
-
+    // Report does not exist: insert first record
     } else {
       let misCount = { a: 0, b: 0, c: 0 };
       let misPrBest = { a: 0, b: 0, c: 0 };
@@ -394,7 +393,6 @@ export class DataRepository implements IDataRepository {
           }
           default:
             playerPercentile = 0.1;
-          // DataRepository.percentil = percentile([10,25,40,60,75,90],percPl);    
         }
         const query = { guid: result[counter].guid };
         let update = {
@@ -465,15 +463,12 @@ export class DataRepository implements IDataRepository {
         y.push(tmpCol);
       }  
     } catch(e) { console.log(e); };
-    
     await this.db.collection('historicalLeaderboard').insertMany(y);
-
     try {
       x = await this.db.collection("rewardsReportLeaderboard").drop();
     } catch (e) {
       console.log("Error dropping table rewardsReportLeaderboard");
     }
-    
     return this.db.collection('userAccounts').updateMany(
       {}, {$set: { balance: balance }});
   }

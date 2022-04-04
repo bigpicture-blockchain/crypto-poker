@@ -85,7 +85,7 @@ export class Table {
   dataRepository: IDataRepository;
   chatMessages: ChatMessage[] = [];
   shutdownRequested: boolean;
-  idleTimeSec: number = 600;
+  idleTimeSec: number = 120; // TEMPORARY SET to 2 minute timeout sitout for debug purpouse
   pendingExchangeRate: number;
   seatHistory: SeatHistory[] = [];
   tournamentId: string;
@@ -222,28 +222,26 @@ export class Table {
   }
   // ++++++++++++++++++++ changed to async / to be fixed
   async handleGameStartingEvent() {
-    let dcx = new DataContainer();
-    dcx.rewardsReportResult = new RewardsReportResult();
-    dcx.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
+    let dcRewardReports = new DataContainer();
+    dcRewardReports.rewardsReportResult = new RewardsReportResult();
+    dcRewardReports.rewardsReportResult.rewards = await this.dataRepository.getRewardsReport();
     try {
-      let dcy = new DataContainer();
-      dcy.missionReportResult = new MissionReportResult();
-      // dcy.missionReportResult = await this.dataRepository.getMissionData();
-      //await this.dataRepository.getMissionData();
-      let a = [];
-      for (let counter = 0; counter < dcx.rewardsReportResult.rewards.length; counter++) {
-        a.push({
-          guid: dcx.rewardsReportResult.rewards[counter].guid,
-          misProgress: dcx.rewardsReportResult.rewards[counter].misProgress,
-          misPrBest: dcx.rewardsReportResult.rewards[counter].misPrBest,
-          misCount: dcx.rewardsReportResult.rewards[counter].misCount,
-          multiplier: dcx.rewardsReportResult.rewards[counter].percentile
+      let dcMissionResults = new DataContainer();
+      dcMissionResults.missionReportResult = new MissionReportResult();
+      let arrayMissionResults = [];
+      for (let counter = 0; counter < dcRewardReports.rewardsReportResult.rewards.length; counter++) {
+        arrayMissionResults.push({
+          guid: dcRewardReports.rewardsReportResult.rewards[counter].guid,
+          misProgress: dcRewardReports.rewardsReportResult.rewards[counter].misProgress,
+          misPrBest: dcRewardReports.rewardsReportResult.rewards[counter].misPrBest,
+          misCount: dcRewardReports.rewardsReportResult.rewards[counter].misCount,
+          multiplier: dcRewardReports.rewardsReportResult.rewards[counter].percentile
         })
       }
-      dcy.missionReportResult.mission = a;
+      dcMissionResults.missionReportResult.mission = arrayMissionResults;
 
-      this.sendDataContainer(dcx);
-      this.sendDataContainerMission(dcy);
+      this.sendDataContainer(dcRewardReports);
+      this.sendDataContainerMission(dcMissionResults);
     }
     catch (e) {
       console.log(e);
@@ -759,6 +757,7 @@ export class Table {
   onClientDisconnected(handle: WebSocketHandle): void {
     let player = this.removeSubscriber(handle);
     if (player && (!this.currentPlayers || this.currentPlayers.indexOf(player) === -1)) {
+      // console.log(player);
       player.isAutoSitout = !player.isSittingOut; //only update if not sitting out as player will be sat back in auto
       player.isSittingOut = true;
       player.sittingOutSince = new Date();
@@ -1185,13 +1184,13 @@ export class Table {
     dbGame.auditEvents = this.auditEvents;
     dbGame.boardCards = this.gameState.boardCards;
     dbGame.players = gameResultPlayers;
-    dbGame.potResults[0].playerHandEvaluatorResults
+    dbGame.potResults[0].playerHandEvaluatorResults;
     let rewardsDetails;
-    for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
-      for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
+    // for (let counter03 = 0; counter03 < data.game.potResults.length; counter03++) {
+    //   for (let counter02 = 0; counter02 < data.game.potResults[counter03].seatWinners.length; counter02++) {
 
-      }
-    }
+    //   }
+    // }
     let winHand = false;
     for (let counter01 = 0; counter01 < gameResultPlayers.length; counter01++) {
       winHand = false;
@@ -1212,7 +1211,6 @@ export class Table {
         winHand: winHand
       }
       // console.log(rewardsDetails);
-      // let zzzxxx = Object.values(result.potResults[0].allocations[0].player.includes(gameResultPlayers[counter01].guid) > -1) ? true : false;
       await this.dataRepository.saveRewardsDetails(rewardsDetails);
       await this.dataRepository.updateRewardsReportLeaderboard(rewardsDetails, gameResultPlayers[counter01].guid);
     }
