@@ -1418,6 +1418,7 @@ export class Table {
   }
 
   async postShowdown(): Promise<void> {
+    this.sendRewardsData();
     let data = new DataContainer();
     this.gameState = null;
     data.game = this.toGameEvent();
@@ -1497,6 +1498,7 @@ export class Table {
   }
 
   async leaveTableInternal(player: PlayerTableHandle, broadcastRemovedPlayer: boolean = true): Promise<any> {
+    this.sendRewardsData();
     this.removePlayer(player);
     if (broadcastRemovedPlayer)
       this.broadcastPlayer(player);
