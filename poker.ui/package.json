@@ -17,6 +17,7 @@
     "bootstrap": "^3.3.7",
     "bootstrap-slider": "^10.2.0",
     "decimal.js": "^10.0.0",
+    "ethers": "^5.6.9",
     "font-awesome": "^4.7.0",
     "jquery": "^2.2.4",
     "long": "^4.0.0",
