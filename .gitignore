@@ -72,3 +72,6 @@ poker.engine/package.json.save.1
 
 .env
 poker.engine/.env
+poker.engine/src/oldtablelist.ts
+poker.engine/.vscode/settings.json
+poker.engine/.env
