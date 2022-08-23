@@ -154,15 +154,50 @@ export class ApiEndpoints {
             }
             let rewards: rewardsI[] = [];
 
-            for (let counter = 0; counter<data.length; counter++) {
-                rewards[counter] = {
-                    rank: counter+1,
-                    name: data[counter].guid.substring(0, 4)+".."+data[counter].guid.substring(35),
-                    profitLoss: data[counter].profitLoss/100,
-                    xp: data[counter].xp,
-                    fireWinnings: 0,
-                    missionsCompleted: data[counter].missionsCompleted
-                }
+            
+
+
+            for (let counter = 0; counter < data.length; counter++) {
+              let x = counter;
+              let fireWinning = 0;
+              if (x === 1) {
+                fireWinning = 1000;
+              } else if (x === 2) {
+                fireWinning = 800;
+              } else if (x === 3) {
+                fireWinning = 600;
+              } else if (x === 4) {
+                fireWinning = 500;
+              } else if (x === 5) {
+                fireWinning = 350;
+              } else if (x === 6) {
+                fireWinning = 250;
+              } else if (x === 7) {
+                fireWinning = 200;
+              } else if (x === 8) {
+                fireWinning = 150;
+              } else if (x > 8 && x < 15) {
+                fireWinning = 100;
+              } else if (x > 14 && x < 25) {
+                fireWinning = 75;
+              } else if (x > 24 && x < 31) {
+                fireWinning = 50;
+              } else if (x > 30 && x < 51) {
+                fireWinning = 25;
+              } else {
+                fireWinning = 0;
+              }
+              rewards[counter] = {
+                rank: counter + 1,
+                name:
+                  data[counter].guid.substring(0, 4) +
+                  ".." +
+                  data[counter].guid.substring(35),
+                profitLoss: data[counter].profitLoss / 100,
+                xp: data[counter].xp,
+                fireWinnings: fireWinning,
+                missionsCompleted: data[counter].missionsCompleted,
+              };
             }
 
             res.send({rewards});
