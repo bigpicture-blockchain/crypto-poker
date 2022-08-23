@@ -297,7 +297,7 @@ export class Table {
     missionsTotal = missionD.length;
     missionsTotal;
     // length - completed <5 ? non va bene !
-    missionsTotal - missionsCompleted > 5
+    missionsTotal - missionsCompleted > 6
       ? (missionsDelTop = missionsTotal - missionsCompleted)
       : (missionsDelTop =
           missionsTotal -
@@ -310,7 +310,7 @@ export class Table {
       missionD.shift();
     }
     missionsTotal = missionD.length;
-    missionsDelTail = missionsTotal - 5;
+    missionsDelTail = missionsTotal - 6;
     for (let counter = 0; counter < missionsDelTail; counter++) {
       missionD.pop();
     }

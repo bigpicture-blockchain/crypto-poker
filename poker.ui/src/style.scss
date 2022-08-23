@@ -4,8 +4,18 @@ $dash-blue: #0e6290;
 $generic-header: lightcyan;
 $cdn: '';
 
+@font-face {
+  font-family: "raleway";
+  src: url("assets/Raleway-VariableFont_wght.ttf") format("truetype");
+}
+
+div {
+  font-family: 'raleway', sans-serif;
+}
+
+
 body {  
-  font-family: 'Roboto Condensed', sans-serif;
+  font-family: 'raleway', sans-serif;
    
 }
 .navbar-default {
@@ -494,7 +504,7 @@ display:none;
 
 #gameinfo {
   color: #FFFFFF;
-    font-family: "Open Sans";
+    font-family: "raleway";
     font-size: 12px;
     font-weight: bold;
     letter-spacing: 0;
@@ -824,9 +834,6 @@ position: absolute;
   font-style:italic;
 }
 
-.player-sitting-inner {
-    
-}
 .player-sitting-inner:before {
     content: "";
     position: relative;
@@ -849,9 +856,6 @@ position: absolute;
   background: url($cdn + "images/You.png") rgb(97, 111, 145) no-repeat;        
   height: 80px;
   width: 105px;
-}
-.player-sitting-inner-grayscale {
-    
 }
 .player-sitting-inner-grayscale:before {
     -webkit-filter: grayscale(100%);
@@ -1226,12 +1230,8 @@ color:green;
     letter-spacing: 0;
     line-height: 17px;
     color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   
-}
-.chatScreenName {
-    // color: red;
-    // font-weight: bold;
 }
 .chatDealer {
   color: aqua;
@@ -1387,7 +1387,7 @@ ux-dialog {
 }
 
 .panel-heading [data-toggle="collapse"]:after {
-  font-family: 'FontAwesome';
+  font-family: 'raleway';
   content: "\f078"; /* "play" icon */
   float: right;
   color: #F58723;
@@ -1416,15 +1416,11 @@ ux-dialog {
     // background-repeat: no-repeat;   
     
       color: #FFFFFF;
-      font-family: "Open Sans";
+      font-family: "raleway";
       font-size: 18px;
       font-weight: 600;
       letter-spacing: 0;
       line-height: 28px;
-}
-.global-chatbox-header{
-    // width: 350px;
-    
 }
 .global-chat-input{
 
@@ -1663,6 +1659,7 @@ ux-dialog {
   border-radius: 10px !important;
   height:  12px !important;
   width: 85%;
+  background-color: #222222;
 }
 
 .progress-bar {
@@ -1676,14 +1673,26 @@ ux-dialog {
   align-items: center;
 }
 .daily_missions_header {
-  height: 42px;
+  font-family: "raleway";
+  height: 40px;
   border-radius: 15px 15px 0 0;
   background-color: #000000;
   padding-left: 20px;
   display: flex;
   align-items: center;
 }
+
 .daily_missions {
+  box-sizing: border-box;
+  height: 622px;
+  width: 421px;
+  border: 1px solid #979797;
+  border-radius: 15px;
+  background-color: #404040;
+  box-shadow: inset 0 41px 0 0 rgba(0,0,0,0.5), inset 0 1px 115px 0 rgba(0,0,0,0.57), 0 2px 37px 0 rgba(0,0,0,0.5);
+}
+
+.daily_missions_old {
   width: 370px;
   height: 600px;
   box-sizing: border-box;
@@ -1695,7 +1704,7 @@ ux-dialog {
 
 .daily_missions_header_text {
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 0;
@@ -1706,22 +1715,20 @@ ux-dialog {
     margin-left: 10px;
 }
 .daily_missions_content{
-    padding: 20px;
-    padding-bottom: 0px;
+    padding: 19px;
+    padding-bottom: 10px;
 }
 .daily_missions_content:not(:first-child){
   border-radius: 15px 15px 0 0;
 }
 .daily_mission_bottom{
-  border-bottom: 1px solid gray;
-}
-.daily_mission_bottom:not(:last-child){
+  border-bottom: 1px solid #555555;
 }
 
 
 .daily_missions_content_title {
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 16px;
   letter-spacing: 0;
   line-height: 28px;
@@ -1733,7 +1740,7 @@ ux-dialog {
 }
 .daily_missions_content_number {
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 16px;
   font-weight: bold;
   letter-spacing: 0;
@@ -1749,7 +1756,7 @@ ux-dialog {
 }
 .daily_missions_content_fire {
   color: #FFA71B;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 10px;
   letter-spacing: 0;
   line-height: 28px;
@@ -1766,6 +1773,17 @@ ux-dialog {
   width: 10px;
 }
 
+.rectangle {
+  box-sizing: border-box;
+  height: 301px;
+  width: 1251px;
+  border: 1px solid #979797;
+  opacity: 0.8;
+  border-radius: 15px;
+  background-color: #404040;
+  box-shadow: inset 0 41px 0 0 rgba(0,0,0,0.5), inset 0 1px 95px 0 rgba(0,0,0,0.65), 0 2px 40px 0 rgba(0,0,0,0.5);
+}
+
 /* Track */
 ::-webkit-scrollbar-track {
   border-radius: 5px;
@@ -1779,13 +1797,13 @@ ux-dialog {
 }
 }
 .table_title {
-  height: 55px;
+  height: 45px;
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 28px;
   font-weight: bold;
   letter-spacing: 0;
-  line-height: 30px;
+  line-height: 20px;
   margin: auto;
 }
 .table_header {
@@ -1793,7 +1811,7 @@ ux-dialog {
   border-radius: 4px 4px 0 0;
   background-color: #000000;
   color: #FFFFFF;
-font-family: "Open Sans";
+font-family: "raleway";
 font-size: 14px;
 font-weight: 600;
 letter-spacing: 0;
@@ -1806,6 +1824,15 @@ line-height: 28px;
   align-items: center;
   padding: 10px;
 } 
+.table_col_rank{
+  width: 50px;
+  align-items: center;
+  color: #FFFFFF;
+}
+.table_col_xp{
+  width: 30px;
+  align-items: left;
+}
 .table_col{
   width: 15%;
   display: flex;
@@ -1831,7 +1858,7 @@ line-height: 28px;
 } 
 .table_body_content {
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
@@ -1839,11 +1866,11 @@ line-height: 28px;
   display: flex;
   align-items: center;
   height: 40px;
-  border-bottom: 1px solid #FFFFFF !important;
+  border-bottom: 1px solid #777777   !important;
 }
 .table_body_content:not(:last-child){
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
@@ -1859,7 +1886,7 @@ line-height: 28px;
 }
 .table_footer_content {
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0;
@@ -1876,7 +1903,7 @@ line-height: 28px;
   background: linear-gradient(
 180deg, #FAD55E 0%, #F7701F 100%);
   color: #FFFFFF;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 10px;
   font-weight: bold;
   letter-spacing: 0;
@@ -1914,7 +1941,7 @@ line-height: 28px;
   text-align: center;
   margin: auto 20px auto 20px;
   color: white;
-  font-family: "Open Sans";
+  font-family: "raleway";
   font-size: 16px;
   font-weight: bold;
   letter-spacing: 0;
