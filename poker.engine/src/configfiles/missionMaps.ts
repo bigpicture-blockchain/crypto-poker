@@ -198,7 +198,7 @@ const missionMap: missionMapI[] = [
   },
 ];
 
-if (true) { //debug 
+if (false) { //debug 
 for (let missi of missionMap) {
   missi.target = toInteger(missi.target/10)+1;
 }
