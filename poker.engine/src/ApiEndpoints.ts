@@ -153,10 +153,10 @@ export class ApiEndpoints {
                 missionsCompleted: number;
             }
             let rewards: rewardsI[] = [];
-
+            let fireWinning = 0;
+            let x = 0;
             for (let counter = 0; counter < data.length; counter++) {
-              let x = counter;
-              let fireWinning = 0;
+              x = counter + 1;
               if (x === 1) {
                 fireWinning = 1000;
               } else if (x === 2) {
@@ -185,7 +185,7 @@ export class ApiEndpoints {
                 fireWinning = 0;
               }
               rewards[counter] = {
-                rank: counter + 1,
+                rank: x,
                 name:
                   data[counter].guid.substring(0, 4) +
                   ".." +

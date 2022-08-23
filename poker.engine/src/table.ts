@@ -391,6 +391,9 @@ export class Table {
           }
         }
       }
+      dcRewardReports.rewardsReportResult.rewards =
+      await this.dataRepository.getRewardsReport();
+     
       for (
         let x = 1;
         x < dcRewardReports.rewardsReportResult.rewards.length + 1;
@@ -425,8 +428,6 @@ export class Table {
           dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 0;
         }
       }
-      dcRewardReports.rewardsReportResult.rewards =
-      await this.dataRepository.getRewardsReport();
       this.sendDataContainerRewards(dcRewardReports);
     } catch (e) {
       console.log(e);
