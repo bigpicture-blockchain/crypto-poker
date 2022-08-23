@@ -321,7 +321,7 @@ export class Table {
       missions: x === null || x === undefined ? missionMapDisplay : x,
     };
 
-    this.dataRepository.updateRewardsReportXPMissions(
+    await this.dataRepository.updateRewardsReportXPMissions(
       guid,
       missionsCompleted,
       xp
@@ -425,6 +425,8 @@ export class Table {
           dcRewardReports.rewardsReportResult.rewards[x-1].fireWinning = 0;
         }
       }
+      dcRewardReports.rewardsReportResult.rewards =
+      await this.dataRepository.getRewardsReport();
       this.sendDataContainerRewards(dcRewardReports);
     } catch (e) {
       console.log(e);

@@ -17,7 +17,7 @@ const missionMapDisplay: missionMapDisplayI[] = [
   {
     position: 0,
     progressbar: "0%",
-    name: "Seen the flop",
+    name: "See flop",
     target: 25,
     current: 0,
     xp: 250,
@@ -25,7 +25,7 @@ const missionMapDisplay: missionMapDisplayI[] = [
   {
     position: 0,
     progressbar: "0%",
-    name: "Seen the turn",
+    name: "See turn",
     target: 20,
     current: 0,
     xp: 300,
@@ -33,7 +33,7 @@ const missionMapDisplay: missionMapDisplayI[] = [
   {
     position: 0,
     progressbar: "0%",
-    name: "Seen the river",
+    name: "See river",
     target: 15,
     current: 0,
     xp: 350,
@@ -41,7 +41,7 @@ const missionMapDisplay: missionMapDisplayI[] = [
   {
     position: 0,
     progressbar: "0%",
-    name: "Seen Showdown",
+    name: "See showdown",
     target: 10,
     current: 0,
     xp: 400,
@@ -57,28 +57,28 @@ const missionMap: missionMapI[] = [
     xp: 100,
   },
   {
-    name: "Seen the flop",
+    name: "See flop",
     field: "seeFlop",
     target: 25,
     current: 0,
     xp: 250,
   },
   {
-    name: "Seen the turn",
+    name: "See turn",
     field: "seeTurn",
     target: 20,
     current: 0,
     xp: 300,
   },
   {
-    name: "Seen the river",
+    name: "See river",
     field: "seeRiver",
     target: 15,
     current: 0,
     xp: 350,
   },
   {
-    name: "Seen showdown",
+    name: "See showdown",
     field: "seeShowdown",
     target: 10,
     current: 0,
@@ -148,14 +148,14 @@ const missionMap: missionMapI[] = [
     xp: 500,
   },
   {
-    name: "Fold Flop",
+    name: "Fold on the flop",
     field: "foldFlop",
     target: 5,
     current: 0,
     xp: 100,
   },
   {
-    name: "Fold Turn",
+    name: "Fold on the turn",
     field: "foldTurn",
     target: 3,
     current: 0,
@@ -178,7 +178,7 @@ const missionMap: missionMapI[] = [
   {
     name: "Play from BTN (VPIP)",
     field: "vpipBTN",
-    target: 0,
+    target: 10,
     current: 0,
     xp: 250,
   },
@@ -198,7 +198,7 @@ const missionMap: missionMapI[] = [
   },
 ];
 
-if (false) { //debug 
+if (true) { //debug 
 for (let missi of missionMap) {
   missi.target = toInteger(missi.target/10)+1;
 }

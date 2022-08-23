@@ -398,7 +398,7 @@ export class DataRepository implements IDataRepository {
           }
           case "wonWoShow":
             {
-              if (addShowdown===1 && addWinHand ===1) {
+              if (addShowdown!=1 && addWinHand ===1) {
                 tempReport.missions[k].current++;
               }
             }
@@ -417,10 +417,10 @@ export class DataRepository implements IDataRepository {
             break;
           }
           case "wonRiverWoShow":
-            {
-              
+            if (addShowdown!=1 && addWinHand ===1 && addSeeRiver) {
+              tempReport.missions[k].current++;
             }
-            break;
+          break;
           case "vpipCO":
             {
             }

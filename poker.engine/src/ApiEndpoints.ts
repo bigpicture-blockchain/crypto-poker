@@ -154,9 +154,6 @@ export class ApiEndpoints {
             }
             let rewards: rewardsI[] = [];
 
-            
-
-
             for (let counter = 0; counter < data.length; counter++) {
               let x = counter;
               let fireWinning = 0;

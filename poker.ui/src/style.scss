@@ -1,13 +1,13 @@
+@font-face {
+  font-family: "raleway";
+  src: url("assets/Raleway-VariableFont_wght.ttf") format("truetype");
+}
 
 $default-border-radius: 5px;
 $dash-blue: #0e6290;
 $generic-header: lightcyan;
 $cdn: '';
 
-@font-face {
-  font-family: "raleway";
-  src: url("assets/Raleway-VariableFont_wght.ttf") format("truetype");
-}
 
 div {
   font-family: 'raleway', sans-serif;
