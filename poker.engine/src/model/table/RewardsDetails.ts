@@ -22,4 +22,5 @@ export class RewardsDetails {
     plRiver: number;
     plShowdown: number;    
     boardCards: string[];
+    position: number;
 }

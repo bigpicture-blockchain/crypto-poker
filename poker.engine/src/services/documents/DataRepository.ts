@@ -310,13 +310,15 @@ export class DataRepository implements IDataRepository {
     let tempReport = await collection.findOne(query);
     let winStreak, currentWinStreak;
     let addProfitLoss = rewardsDetails.profitLoss
+    let addShowdown = rewardsDetails.seenShowdown ? 1 : 0;
     let addOnePair = rewardsDetails.handRank == 2 ? 1 : 0;
     let addTwoPairs = rewardsDetails.handRank == 3 ? 1 : 0;
     let addSeeFlop = (rewardsDetails.lastStreet == "flop" || rewardsDetails.lastStreet == "turn" || rewardsDetails.lastStreet == "river") ? 1 : 0;
     let addSeeTurn = (rewardsDetails.lastStreet == "turn" || rewardsDetails.lastStreet == "river") ? 1 : 0;
+    let position = rewardsDetails.position;
     let addSeeRiver = rewardsDetails.lastStreet == "river" ? 1 : 0;
     let addWinHand = rewardsDetails.winHand ? 1 : 0;
-    let update, lastProfitLoss = 0, lastHandOnePair = 0, lastHandTwoPairs = 0, lastSeeFlop = 0, lastSeeTurn = 0, lastSeeRiver = 0, lastWinHand = 0, currentMission = 0, lastHandsPlayed = 0;
+    let update, lastProfitLoss = 0, lastHandOnePair = 0, lastHandTwoPairs = 0, lastSeeFlop = 0, lastSeeTurn = 0, lastSeeRiver = 0, lastWinHand = 0, currentMission = 0, lastHandsPlayed = 0, lastShowdown = 0;
 
     if (tempReport != null) {
       winStreak = tempReport.winStreak ? tempReport.winStreak : 0;
@@ -328,33 +330,115 @@ export class DataRepository implements IDataRepository {
       lastSeeFlop = await this.notNaN(tempReport.seeFlop);
       lastSeeTurn = await this.notNaN(tempReport.seeTurn);
       lastSeeRiver = await this.notNaN(tempReport.seeRiver);
+      lastShowdown = await this.notNaN(tempReport.seenShowdown);
       lastWinHand = (tempReport.winHand == undefined || isNaN(tempReport.winHand) || tempReport.winHand == false) ? 0 : tempReport.winHand;
       lastHandsPlayed = await this.notNaN(tempReport.handsPlayed);
       let totProfitLoss = lastProfitLoss + addProfitLoss;
       for (let k = 0; k < tempReport.missions.length; k++) {
-        console.log(JSON.stringify(tempReport.missions[k]));      
+        console.log(JSON.stringify(tempReport.missions[k]));
+        // let curMis = tempReport.missions[k].current;
         switch (tempReport.missions[k].field) {
+          case "playedHands":
+            tempReport.missions[k].current = lastHandsPlayed + 1;
+            break;
           case "seeFlop":
             tempReport.missions[k].current = addSeeFlop + lastSeeFlop;
             break;
-          case "wonHand":
-            tempReport.missions[k].current = addWinHand + lastWinHand;  
+          case "seeTurn":
+            tempReport.missions[k].current = addSeeTurn + lastSeeTurn;
             break;
-          case "playedHands":
-            tempReport.missions[k].current = lastHandsPlayed + 1;  
+          case "seeRiver":
+            tempReport.missions[k].current = addSeeRiver + lastSeeRiver;
             break;
-          case "wonSeeFlop":
-            if (addSeeFlop===1 && addWinHand===1) {
+          case "seeShowdown":
+            tempReport.missions[k].current = addShowdown + lastShowdown;
+            break;
+          case "wonBTN": {
+            if (position === 0 && addWinHand) {
               tempReport.missions[k].current++;
+            }
+            break;
+          }
+          case "wonOnePair":
+            {
+              if (addOnePair && addWinHand) {
+                tempReport.missions[k].current++;
+              }
             }
             break;
           case "lostSeeFlop":
-            if (addSeeFlop===1 && addWinHand===0) {
+            if (addSeeFlop === 1 && addWinHand === 0) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          case "wonSeeFlop":
+            if (addSeeFlop === 1 && addWinHand === 1) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          case "wonThreePlusOnFlop":
+            {
+            }
+            break;
+          case "wonCO":
+            break;
+          case "wonHand":
+            tempReport.missions[k].current = addWinHand + lastWinHand;
+            break;
+          case "wonSB":
+            if (position === 1 && addWinHand) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          case "wonBB": {
+            if (position===2 && addWinHand) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          }
+          case "wonWoShow":
+            {
+              if (addShowdown!=1 && addWinHand ===1) {
+                tempReport.missions[k].current++;
+              }
+            }
+            break;
+
+          case "foldFlop": {
+            if (rewardsDetails.lastStreet === "flop" && !addWinHand) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          }
+          case "foldTurn": {
+            if (rewardsDetails.lastStreet === "turn" && !addWinHand) {
+              tempReport.missions[k].current++;
+            }
+            break;
+          }
+          case "wonRiverWoShow":
+            if (addShowdown!=1 && addWinHand ===1 && addSeeRiver) {
               tempReport.missions[k].current++;
             }
           break;
+          case "vpipCO":
+            {
+            }
+            break;
+          case "vpipBTN":
+            {
+            }
+            break;
+          case "vpipSB":
+            {
+            }
+            break;
+          case "vpipBB":
+            {
+            }
+            break;
           default:
-            console.log("Mission not found");
+            console.log(`Mission ${tempReport.missions[k].field} not found`);
             break;
         }
       }

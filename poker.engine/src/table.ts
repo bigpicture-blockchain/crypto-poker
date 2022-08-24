@@ -264,17 +264,26 @@ export class Table {
     let missionsDelTop: number = 0;
     let missionsDelTail: number = 0;
     var missionD: missionMapDisplayI[] = [];
+    let namesRanked: String[] = [];
     data.forEach((element) => {
       progressbarN = (element.current / element.target) * 100;
       if (element.current >= element.target) {
         xp += element.xp;
         missionsCompleted++;
       }
+      let position = progressbarN; 
+      if (namesRanked.includes(element.name)) {
+        position -= 100;
+      } 
+      if (position>0 && position<100) {
+        namesRanked.push(element.name);
+      }
+      
       missionD.push({
         name: element.name,
         progressbar: progressbarN.toString() + "%",
         xp: element.xp,
-        position: progressbarN,
+        position: position,
         target: element.target,
         current:
           element.current < element.target ? element.current : element.target,
@@ -288,7 +297,7 @@ export class Table {
     missionsTotal = missionD.length;
     missionsTotal;
     // length - completed <5 ? non va bene !
-    missionsTotal - missionsCompleted > 5
+    missionsTotal - missionsCompleted > 6
       ? (missionsDelTop = missionsTotal - missionsCompleted)
       : (missionsDelTop =
           missionsTotal -
@@ -301,7 +310,7 @@ export class Table {
       missionD.shift();
     }
     missionsTotal = missionD.length;
-    missionsDelTail = missionsTotal - 5;
+    missionsDelTail = missionsTotal - 6;
     for (let counter = 0; counter < missionsDelTail; counter++) {
       missionD.pop();
     }
@@ -312,7 +321,7 @@ export class Table {
       missions: x === null || x === undefined ? missionMapDisplay : x,
     };
 
-    this.dataRepository.updateRewardsReportXPMissions(
+    await this.dataRepository.updateRewardsReportXPMissions(
       guid,
       missionsCompleted,
       xp
@@ -382,6 +391,9 @@ export class Table {
           }
         }
       }
+      dcRewardReports.rewardsReportResult.rewards =
+      await this.dataRepository.getRewardsReport();
+     
       for (
         let x = 1;
         x < dcRewardReports.rewardsReportResult.rewards.length + 1;
@@ -1429,12 +1441,28 @@ export class Table {
 
     data.game = this.toGameEvent();
     data.game.potResults = [];
+    let maxPos = 0;
     for (let counter = 0; counter < this.players.length; counter++) {
-      console.log(this.players[counter].seat === 0);
+      let plPosition: number = 0;
       if (this.players[counter].seat === this.dealerSeat) {
-        this.players[counter].position = 0;
+        this.players[counter].position = plPosition;
+        
+        for (let counterAD = counter+1; counterAD < this.players.length; counterAD++) {
+          if (this.players[counterAD].playing) {
+            this.players[counterAD].position = ++plPosition;
+            maxPos = plPosition;
+          }
+        }
+        for (let counterAD = 0; counterAD < counter; counterAD++) {
+          if (this.players[counterAD].playing) {
+            this.players[counterAD].position = ++plPosition;
+            maxPos = plPosition;
+          }
+        }
       }
     }
+
+    
     let combinedPlayers = this.players.filter(
       (p) => p.cumulativeBet > 0 || this.currentPlayers.indexOf(p) > -1
     ); //need to include players who were sat out but paid blinds
@@ -1564,16 +1592,15 @@ export class Table {
             }
           }
         }
+        let handrank = dbGame.potResults[0].playerHandEvaluatorResults[counter01]
+            ? dbGame.potResults[0].playerHandEvaluatorResults[counter01].handRank : 0;
         hasFolded =
           gameResultPlayers[counter01].hasFolded === true ? false : true;
-        rewardsDetails.push({
+          rewardsDetails.push({
           date: new Date(Date.now()),
           guid: gameResultPlayers[counter01].guid,
           profitLoss: gameResultPlayers[counter01].profitLoss,
-          handRank: dbGame.potResults[0].playerHandEvaluatorResults[counter01]
-            ? dbGame.potResults[0].playerHandEvaluatorResults[counter01]
-                .handRank
-            : 0,
+          handRank: handrank,
           handRankEnglish: dbGame.potResults[0].playerHandEvaluatorResults[
             counter01
           ]
@@ -1584,12 +1611,13 @@ export class Table {
             ? gameResultPlayers[counter01].lastStreet
             : "preflop",
           winHand: winHand,
+          position: gameResultPlayers[counter01].position,
           flopScore: gameResultPlayers[counter01].missionData.flopScore,
           score: gameResultPlayers[counter01].missionData.score,
           turnScore: gameResultPlayers[counter01].missionData.turnScore,
           flopRank: gameResultPlayers[counter01].missionData.flopRank,
           turnRank: gameResultPlayers[counter01].missionData.turnRank,
-          seenShowdown: hasFolded,
+          seenShowdown: handrank>0 ? true : false,
           holeCards: gameResultPlayers[counter01].holecards,
           boardCards: this.gameState.boardCards,
         });
