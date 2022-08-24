@@ -99,14 +99,14 @@ const missionMap: missionMapI[] = [
     xp: 500,
   },
   {
-    name: "Lost hand after seen flop",
+    name: "Lost hand after seeing flop",
     field: "lostSeeFlop",
     target: 10,
     current: 0,
     xp: 250,
   },
   {
-    name: "Win hand after seen flop",
+    name: "Win hand after seeing flop",
     field: "wonSeeFlop",
     target: 10,
     current: 0,
